@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import styles from './page.module.css';
 
-import { Button, Flex, Form, Input, InputNumber, Typography } from "antd";
+import { Button, Flex, Form, Input, InputNumber, message, Typography } from "antd";
 
 import { LockOutlined, PhoneOutlined } from "@ant-design/icons";
 
@@ -15,6 +15,7 @@ const { Text, Title } = Typography;
 const SignUp = () => {
   const router = useRouter();
   const [submitLoader, setSubmitLoader] = useState(false)
+  const [messageApi, contextHolder] = message.useMessage();
 
   const signUpSubmit2 = async (formData: Record<string, unknown>) => {
     setSubmitLoader(true)
@@ -23,14 +24,23 @@ const SignUp = () => {
     delete payload.confirm_password
     delete payload.password
 
-    const endpoint = '/users/sign-up';
+    const endpoint = '/users/signup';
     
 
     try {
       const resp = await axios.post(API_BASE_URL + endpoint, payload, { headers: {'Content-Type': 'application/json' }});
       console.log(resp, 'success')
+      messageApi.open({
+        type: 'success',
+        content: resp?.data?.message
+      })
+
     } catch(error) {
       console.log({end: API_BASE_URL+endpoint, payload, error}, 'err')
+      messageApi.open({
+        type: 'error',
+        content: (error as {message: string})?.message
+      })
     } finally {
       setSubmitLoader(false)
     }
@@ -39,6 +49,7 @@ const SignUp = () => {
 
   return (
     <section className={styles.section}>
+      {contextHolder}
       <div className={styles.container}>
         <Flex className={styles.header} vertical justify="center" align="center">
           <svg
@@ -100,7 +111,13 @@ const SignUp = () => {
             <Input placeholder="Last Name" />
           </Form.Item>
 
-          <Form.Item name="user_name" label="Username">
+          <Form.Item name="user_name" label="Username" required
+          rules={[
+            {
+              required: true,
+              message: "Please enter Username!",
+            },
+          ]}>
             <Input placeholder="Username" />
           </Form.Item>
 
