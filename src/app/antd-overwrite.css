@@ -1,0 +1,20 @@
+.ant-form-item-label >.ant-form-item-required::before {
+  display: none !important;
+}
+
+.ant-form-item-label >.ant-form-item-required::after {
+    visibility: visible !important;
+
+    /* position: relative; */
+    /* margin-block: 0; */
+    margin-inline-start: 4px !important;
+    /* margin-inline-end: 8px; */
+
+    display: inline-block;
+    margin-inline-start: 4px;
+    color: #ff4d4f;
+    font-size: 14px;
+    font-family: SimSun, sans-serif;
+    line-height: 1;
+    content: "*" !important;
+}
