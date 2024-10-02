@@ -12,10 +12,23 @@ export const signUpSubmit = async (formData: Record<string, unknown>) => {
     delete payload.confirm_password
     delete payload.password
 
-    const endpoint = '/users/sign-up';
+    const endpoint = '/users/signup';
     
+    let resp;
 
-    const resp = await axios.post(API_BASE_URL + endpoint, payload, { headers: {'Content-Type': 'application/json' }});
+    try {
+        resp = await axios.post(API_BASE_URL + endpoint, payload, { headers: {'Content-Type': 'application/json' }});
+        console.log(resp, 'success')
+  
+      } catch(error) {
+        resp = {
+            status: (error as {status: number})?.status || 400,
+            message: (error as {message: string}).message || "Something went wrong",
+            success: false,
+        }
+        console.log({end: API_BASE_URL+endpoint, payload, error}, 'err')
+      }
 
-    console.log({end: API_BASE_URL+endpoint, payload, resp})
+    return resp
+    // console.log({end: API_BASE_URL+endpoint, payload, resp})
 }
