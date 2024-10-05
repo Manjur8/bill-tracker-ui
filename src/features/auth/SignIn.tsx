@@ -1,18 +1,21 @@
 "use client"
-import React from "react";
+import React, { useState } from "react";
 
 import styles from './page.module.css';
 
-import { Button, Checkbox, Flex, Form, Input, Typography } from "antd";
+import { Button, Checkbox, Flex, Form, Input, message, Typography } from "antd";
 
-import { LockOutlined, MailOutlined } from "@ant-design/icons";
+import { LockOutlined, PhoneOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-import { signInSubmit } from "@/actions/auth-actions";
+import { APICall } from "@/utils/ApiCall";
 
 const { Text, Title } = Typography;
 
 export default function SignIn() {
   const router = useRouter();
+  const [messageApi, contextHolder] = message.useMessage();
+  const [submitLoader, setSubmitLoader] = useState(false)
+
   //   container: {
   //     margin: "0 auto",
   //     padding: screens.md ? `${token.paddingXL}px` : `${token.sizeXXL}px ${token.padding}px`,
@@ -46,8 +49,27 @@ export default function SignIn() {
   //   }
   // };
 
+  const handleSubmit = async(values: Record<string, unknown>) => {
+    setSubmitLoader(true)
+    const resp = await APICall('post', 'PUBLIC_USERS_SIGNIN',  values)
+
+    if(resp?.success) {
+      messageApi.open({
+        type: 'success',
+        content: resp?.message
+      })
+    } else {
+      messageApi.open({
+        type: 'error',
+        content: resp?.message
+      })
+    }
+    setSubmitLoader(false)
+  }
+
   return (
     <section className={styles.section}>
+      {contextHolder}
       <div className={styles.container}>
         <Flex className={styles.header} vertical justify="center" align="center">
           <svg
@@ -82,23 +104,23 @@ export default function SignIn() {
           initialValues={{
             remember: true,
           }}
-          onFinish={signInSubmit}
+          onFinish={handleSubmit}
           layout="vertical"
           requiredMark="optional"
         >
           <Form.Item
-            name="email"
+            name="contact"
             rules={[
               {
-                type: "email",
+                // type: "email",
                 required: true,
-                message: "Please input your Email!",
+                message: "Please input your Phone Number!",
               },
             ]}
           >
             <Input
-              prefix={<MailOutlined />}
-              placeholder="Email"
+              prefix={<PhoneOutlined rotate={90} />}
+              placeholder="Phone Number"
             />
           </Form.Item>
           <Form.Item
@@ -117,15 +139,15 @@ export default function SignIn() {
             />
           </Form.Item>
           <Form.Item>
-            <Form.Item name="remember" valuePropName="checked" noStyle>
-              <Checkbox>Remember me</Checkbox>
+            <Form.Item valuePropName="checked" noStyle>
+              <Checkbox defaultChecked>Remember me</Checkbox>
             </Form.Item>
             <a className={styles.forgotPassword} href="">
               Forgot password?
             </a>
           </Form.Item>
           <Form.Item className={'mb-o'}>
-            <Button block={true} type="primary" htmlType="submit">
+            <Button block={true} type="primary" loading={submitLoader} disabled={submitLoader} iconPosition={'end'} htmlType="submit">
               Log in
             </Button>
             <div className={styles.footer}>

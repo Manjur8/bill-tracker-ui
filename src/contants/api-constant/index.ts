@@ -2,4 +2,5 @@
 // ====eg: PUBLIC_USERS_SIGNUP: '/users/signup',  as sign-up api doesn't need auth token====
 export const API_ROUTES: Record<string, string> = {
     PUBLIC_USERS_SIGNUP: '/users/signup',
+    PUBLIC_USERS_SIGNIN: '/users/signin',
 }

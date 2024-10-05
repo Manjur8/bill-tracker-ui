@@ -20,7 +20,7 @@ export async function makeRequest<T>(httpType: httpVerb, route: string, payload 
             headers: await getHeader(!route.includes('PUBLIC')),
             ...config
         }
-        console.log(API_ENDPOINT, payload, httpType);
+        // console.log(API_ENDPOINT, payload, httpType);
         const response: AxiosResp<T> = await axios({ method: httpType, url: API_ENDPOINT, data: payload, ...requestConfig });
 
         const return_response = {
@@ -35,7 +35,7 @@ export async function makeRequest<T>(httpType: httpVerb, route: string, payload 
         const status = error?.response?.status || error?.status || (err as CustomError)?.customStatus || 500;
         const message = parseMsgObj(error?.response?.data?.message) || (err as CustomError)?.customMsg || 'Something went wrong!';
 
-        console.log('Checkout API calling Error => ', message, error.response?.data, status, isRefreshTokenCalled);
+        // console.log('API calling Error => ', message, error.response?.data, status, isRefreshTokenCalled);
 
         if (status === 403 || status === 401) {
             // === taking actions if access token expired=====

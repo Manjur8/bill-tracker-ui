@@ -25,7 +25,6 @@ const SignUp = () => {
     
 
     const resp = await APICall('post', 'PUBLIC_USERS_SIGNUP', payload)
-    console.log(resp, 'success')
     if(resp?.success) {
 
       messageApi.open({
