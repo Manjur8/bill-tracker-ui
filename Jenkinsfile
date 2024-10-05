@@ -20,7 +20,7 @@ pipeline {
                 script {
                     sh 'docker rm -f apt-billing-ui || true'
                     def app = docker.build("apt-billing-ui:latest")
-                    app.run('-p 3000:3000 --name apt-billing-ui')
+                    app.run('-p 3000:3000 --restart always --name apt-billing-ui')
                 }
             }
         }
