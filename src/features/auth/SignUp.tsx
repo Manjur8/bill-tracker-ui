@@ -8,7 +8,7 @@ import { LockOutlined, PhoneOutlined } from "@ant-design/icons";
 
 import { useRouter } from "next/navigation";
 // import { signUpSubmit } from "@/actions/auth-actions";
-import axios from "axios";
+import { APICall } from "@/utils/ApiCall";
 
 const { Text, Title } = Typography;
 
@@ -19,31 +19,26 @@ const SignUp = () => {
 
   const signUpSubmit2 = async (formData: Record<string, unknown>) => {
     setSubmitLoader(true)
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
     const payload: Record<string, unknown> = {...formData, phone: String(formData.phone), secrets: {password: formData.password}}
     delete payload.confirm_password
     delete payload.password
-
-    const endpoint = '/users/signup';
     
 
-    try {
-      const resp = await axios.post(API_BASE_URL + endpoint, payload, { headers: {'Content-Type': 'application/json' }});
-      console.log(resp, 'success')
+    const resp = await APICall('post', 'PUBLIC_USERS_SIGNUP', payload)
+    console.log(resp, 'success')
+    if(resp?.success) {
+
       messageApi.open({
         type: 'success',
-        content: resp?.data?.message
+        content: resp?.message
       })
-
-    } catch(error) {
-      console.log({end: API_BASE_URL+endpoint, payload, error}, 'err')
+    } else {
       messageApi.open({
         type: 'error',
-        content: (error as {message: string})?.message
+        content: resp?.message
       })
-    } finally {
-      setSubmitLoader(false)
     }
+    setSubmitLoader(false)
 
   }
 
@@ -82,7 +77,7 @@ const SignUp = () => {
         </Flex>
         <Form
           name="sign_up"
-          autoComplete="off"
+          autoComplete={"off"}
           onFinish={signUpSubmit2}
           layout="vertical"
           // requiredMark="optional"
