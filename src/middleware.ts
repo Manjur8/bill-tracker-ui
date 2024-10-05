@@ -1,10 +1,5 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-
-// 1. Specify protected and public routes
-const protectedRoutes = ['/']
-const publicRoutes = ['/sign-in', '/sign-up']
-
  
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
@@ -14,16 +9,16 @@ export function middleware(request: NextRequest) {
     const { pathname, host } = nextUrl
     const authToken = request.cookies.get("auth-token")
 
-    const isProtectedRoute = protectedRoutes.includes(pathname)
-    const isPublicRoute = publicRoutes.includes(pathname)
+    // const isProtectedRoute = protectedRoutes.includes(pathname)
+    const isPublicRoute = pathname.startsWith("/auth")
 
     // =====Redirect to /sign-in if the user is not authenticated=====
-    if (isProtectedRoute && !authToken) {
+    if (!isPublicRoute && !authToken) {
         return NextResponse.redirect(new URL('/auth/sign-in', request.nextUrl));
     }
 
     // =============Redirect to / if the user is authenticated========== 
-    if(isPublicRoute && authToken && !pathname.startsWith("/")) {
+    if(isPublicRoute && authToken) {
         return NextResponse.redirect(new URL('/', request.nextUrl))
     }
 
