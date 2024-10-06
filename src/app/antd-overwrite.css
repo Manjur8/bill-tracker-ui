@@ -1,3 +1,8 @@
+.css-variables {
+  --background-white: #ffffff,
+  --primary-text: rgba(0, 0, 0, 0.88),
+}
+
 .ant-form-item-label >.ant-form-item-required::before {
   display: none !important;
 }
@@ -17,4 +22,10 @@
     font-family: SimSun, sans-serif;
     line-height: 1;
     content: "*" !important;
+}
+
+.ant-layout-sider .ant-layout-sider-trigger {
+  background: var(--background-white) !important;
+  height: 72px !important;
+  line-height: 18px !important;
 }

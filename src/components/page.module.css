@@ -1,0 +1,14 @@
+.profile_img {
+    position: absolute;
+    top: 16px;
+    left: 12px;
+}
+
+/* ====Sidebar Trigger===== */
+.sidebar_trigger_padding {
+    padding: 8px 16px 0 24px;
+}
+.sidebar_trigger_padding_collapsed {
+    padding: 8px 16px 0 16px;
+}
+/* ====================== */
