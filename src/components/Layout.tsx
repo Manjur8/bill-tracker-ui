@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MenuFoldOutlined, MenuUnfoldOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Button, Divider, Layout, Menu } from 'antd';
 import { AntdRegistry } from "@ant-design/nextjs-registry";
@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import logo from '../app/favicon.ico'
 import styles from './page.module.css'
+import { getCookies } from '@/utils/cookies';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -23,6 +24,14 @@ const CustomLayout = ({children}: {children: React.ReactNode}) => {
   const [isMobileScreen, setIsMobileScreen] = useState(false)
   const [collapsed, setCollapsed] = useState(true)
   const isPublicPage = pathName.startsWith('/auth')
+  const [userInfo, setUserInfo] = useState({first_name: '', last_name: ''})
+  useEffect(() => {
+    async function getUserInfo () {
+      const parsedData = JSON.parse(await getCookies('user-info') || '')
+       setUserInfo(parsedData)
+    }
+    getUserInfo()
+  }, [])
 
   return isPublicPage ? (
     <AntdRegistry>
@@ -57,7 +66,7 @@ const CustomLayout = ({children}: {children: React.ReactNode}) => {
                         !collapsed && (
                           <div>
                             <h4 className='text-secondary'>Hi,</h4>
-                            <h4 className='text-primary'>John</h4>
+                            <h4 className='text-primary'>{userInfo?.first_name}</h4>
                           </div>
                         )
                       }

@@ -52,7 +52,7 @@ export default function SignIn() {
 
   const handleSubmit = async(values: Record<string, unknown>) => {
     setSubmitLoader(true)
-    const resp = await APICall<{result: {token: string}}>('post', 'PUBLIC_USERS_SIGNIN',  values)
+    const resp = await APICall<{result: {token: string, first_name: string, last_name: string}}>('post', 'PUBLIC_USERS_SIGNIN',  values)
 
     if(resp?.success) {
       messageApi.open({
@@ -60,6 +60,7 @@ export default function SignIn() {
         content: resp?.message
       })
       await setCookies('auth-token', resp?.data?.result?.token)
+      await setCookies('user-info', JSON.stringify({first_name: resp?.data?.result?.first_name, last_name: resp?.data?.result?.last_name}))
       router.push('/')
     } else {
       messageApi.open({
