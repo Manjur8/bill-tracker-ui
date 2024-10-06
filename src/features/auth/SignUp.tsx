@@ -9,6 +9,8 @@ import { LockOutlined, PhoneOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 // import { signUpSubmit } from "@/actions/auth-actions";
 import { APICall } from "@/utils/ApiCall";
+import { App_Name, Logo2 } from "@/contants/AppConstant";
+import Image from "next/image";
 
 const { Text, Title } = Typography;
 
@@ -46,31 +48,12 @@ const SignUp = () => {
       {contextHolder}
       <div className={styles.container}>
         <Flex className={styles.header} vertical justify="center" align="center">
-          <svg
-            width="25"
-            height="24"
-            viewBox="0 0 25 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <rect x="0.464294" width="24" height="24" rx="4.8" fill="#1890FF" />
-            <path
-              d="M14.8643 3.6001H20.8643V9.6001H14.8643V3.6001Z"
-              fill="white"
-            />
-            <path
-              d="M10.0643 9.6001H14.8643V14.4001H10.0643V9.6001Z"
-              fill="white"
-            />
-            <path
-              d="M4.06427 13.2001H11.2643V20.4001H4.06427V13.2001Z"
-              fill="white"
-            />
-          </svg>
+          <Image src={Logo2} alt="image" width={25} height={24} />          
+
 
           <Title className={styles.title}>Sign up</Title>
           <Text className={styles.text}>
-            Welcome back to Bill Tracker! Please enter your details below to
+            Welcome back to {App_Name}! Please enter your details below to
             register.
           </Text>
         </Flex>

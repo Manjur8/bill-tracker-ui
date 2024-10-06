@@ -1,23 +1,15 @@
 "use client"
 import React, { useEffect, useState } from 'react';
-import { MenuFoldOutlined, MenuUnfoldOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Button, Divider, Layout, Menu } from 'antd';
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
-import logo from '../app/favicon.ico'
 import styles from './page.module.css'
 import { getCookies } from '@/utils/cookies';
+import { App_Name, Logo1, Logo2, SidebarMenus } from '@/contants/AppConstant';
 
 const { Header, Content, Footer, Sider } = Layout;
-
-const items = [UserOutlined, VideoCameraOutlined, UploadOutlined, UserOutlined].map(
-  (icon, index) => ({
-    key: String(index + 1),
-    icon: React.createElement(icon),
-    label: `nav ${index + 1}`,
-  }),
-);
 
 const CustomLayout = ({children}: {children: React.ReactNode}) => {
   const pathName = usePathname();
@@ -60,7 +52,7 @@ const CustomLayout = ({children}: {children: React.ReactNode}) => {
                   <>
                       <Divider className='mt-mb-4' />
                   <div className={`d-flex gap-8 align-items-center text-align-left m-4 ${styles.sidebar_trigger_padding}`}>
-                      <Image src={logo} alt="image" width={36} height={36} className={collapsed ? styles.profile_img : ''} />
+                      <Image src={Logo1} alt="image" width={36} height={36} className={collapsed ? styles.profile_img : ''} />
                       
                       {
                         !collapsed && (
@@ -77,19 +69,19 @@ const CustomLayout = ({children}: {children: React.ReactNode}) => {
                 <div className="demo-logo-vertical" />
                 <>
                   <div className={`d-flex flex-direction-column gap-8 align-items-center justify-content-center text-align-left m-4 ${collapsed ? styles.sidebar_trigger_padding_collapsed : styles.sidebar_trigger_padding}`}>
-                      <Image src={logo} alt="image" width={36} height={36} />
+                      <Image src={Logo2} alt="image" width={32} height={32} />
                       
                       {
                         !collapsed && (
                           <div>
-                            <h4 className='text-primary'>Bill Tracker</h4>
+                            <h4 className='text-primary'>{App_Name}</h4>
                           </div>
                         )
                       }
                   </div>
                       <Divider className='mt-mb-4' />
                   </>
-                <Menu mode="inline" defaultSelectedKeys={['1']} items={items}/>
+                <Menu mode="inline" defaultSelectedKeys={['1']} items={SidebarMenus}/>
                 {/* <Button
                 type="text"
                 icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
