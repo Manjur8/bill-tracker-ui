@@ -11,7 +11,7 @@ export type httpVerb = 'get' | 'post' | 'delete' | 'put' | 'patch';
 type AxiosResp<T> = { data: { message: string, data: T, row: T } }
 
 // let auth_token: string;
-let refresh_token: string;
+// let refresh_token: string;
 
 export async function makeRequest<T>(httpType: httpVerb, route: string, payload = {}, config: AxiosRequestConfig = {}, isRefreshTokenCalled = false) {
     try {
@@ -33,23 +33,23 @@ export async function makeRequest<T>(httpType: httpVerb, route: string, payload 
     } catch (err) {
         const error = err as AxiosError<Error>;
         const status = error?.response?.status || error?.status || (err as CustomError)?.customStatus || 500;
-        const message = parseMsgObj(error?.response?.data?.message) || (err as CustomError)?.customMsg || 'Something went wrong!';
+        const message = parseMsgObj(error?.message) || (err as CustomError)?.customMsg || 'Something went wrong!';
 
-        // console.log('API calling Error => ', message, error.response?.data, status, isRefreshTokenCalled);
+        console.log('API calling Error => ', message, error.response?.data, status, isRefreshTokenCalled);
 
-        if (status === 403 || status === 401) {
-            // === taking actions if access token expired=====
-            // const res = await AccountsAPICall("post", "REFRESH_TOKEN", { refresh_token });
-            console.log(refresh_token, 'refresh_token')
-            const res = {success: false}
-            if (!res?.success || isRefreshTokenCalled) {
-                // FOR REDIRECT to ACCOUNT
-                return { success: false as const, message: "REDIRECT_TO_LOGIN_PAGE", errors: [] }
-                // redirect(process.env.NEXT_PUBLIC_ACCOUNTS_DASHBOARD_URL || '');
-            } else {
-                return await makeRequest(httpType, route, payload, config, true);
-            }
-        }
+        // if (status === 403 || status === 401) {
+        //     // === taking actions if access token expired=====
+        //     // const res = await AccountsAPICall("post", "REFRESH_TOKEN", { refresh_token });
+        //     // console.log(refresh_token, 'refresh_token')
+        //     const res = {success: false}
+        //     if (!res?.success || isRefreshTokenCalled) {
+        //         // FOR REDIRECT to ACCOUNT
+        //         return { success: false as const, message: "REDIRECT_TO_LOGIN_PAGE", errors: [] }
+        //         // redirect(process.env.NEXT_PUBLIC_ACCOUNTS_DASHBOARD_URL || '');
+        //     } else {
+        //         return await makeRequest(httpType, route, payload, config, true);
+        //     }
+        // }
 
         return { success: false as const, message, errors: (error as any).response?.data?.errors ?? [] };
     }
@@ -68,20 +68,20 @@ const getEndpoint = (route: string) => {
     return endpoint.replace(/(https?:\/\/|wss?:\/\/)|(\/){2,}/g, '$1$2');
 }
 
-const getAccessToken = async () => {
-    try {
-        const sso_token = await cookies().get('sso_token')?.value ?? '';
-        const resp = await axios.get(`${process.env.NEXT_PUBLIC_CHECKOUT_BASE_URL}api/get-token?sso_token=${sso_token}`)
-        const data = resp?.data
-        if (data?.success) {
-            return data?.data
-        }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
-        console.log('Error while fetching redis data for in apiCall')
-    }
-    return null;
-}
+// const getAccessToken = async () => {
+//     try {
+//         const sso_token = await cookies().get('sso_token')?.value ?? '';
+//         const resp = await axios.get(`${process.env.NEXT_PUBLIC_CHECKOUT_BASE_URL}api/get-token?sso_token=${sso_token}`)
+//         const data = resp?.data
+//         if (data?.success) {
+//             return data?.data
+//         }
+//     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+//     } catch (err) {
+//         console.log('Error while fetching redis data for in apiCall')
+//     }
+//     return null;
+// }
 
 const getHeader = async (isAuthorized = true) => {
     const headers: AxiosRequestConfig['headers'] = {
@@ -89,13 +89,14 @@ const getHeader = async (isAuthorized = true) => {
     }
 
     if(isAuthorized) {
-        const accessDataResp = await getAccessToken();
-        const auth_token = accessDataResp?.access_token
+        // const accessDataResp = await getAccessToken();
+        // const auth_token = accessDataResp?.access_token
+        const auth_token = await cookies().get('auth-token')?.value
         if (!auth_token) {
             // REDIRECT TO ACCOUNT PAGE
             throw new CustomError('Auth token is required.', 403);
         }
-        refresh_token = accessDataResp?.refresh_token
+        // refresh_token = accessDataResp?.refresh_token
         headers.Authorization = 'Bearer ' + auth_token;
     }
 
