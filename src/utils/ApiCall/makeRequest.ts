@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use server';
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
-import { API_ROUTES } from "@/contants/api-constant";
+import { API_ROUTES } from "@/contants/ApiConstant";
 import { CustomError } from "@/custom/CustomError";
 // import { AccountsAPICall } from "./accountsApiCall";
 import { cookies } from 'next/headers';
