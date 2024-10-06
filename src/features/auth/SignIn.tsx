@@ -8,6 +8,7 @@ import { Button, Checkbox, Flex, Form, Input, message, Typography } from "antd";
 import { LockOutlined, PhoneOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { APICall } from "@/utils/ApiCall";
+import { setCookies } from "@/utils/cookies";
 
 const { Text, Title } = Typography;
 
@@ -51,20 +52,22 @@ export default function SignIn() {
 
   const handleSubmit = async(values: Record<string, unknown>) => {
     setSubmitLoader(true)
-    const resp = await APICall('post', 'PUBLIC_USERS_SIGNIN',  values)
+    const resp = await APICall<{result: {token: string}}>('post', 'PUBLIC_USERS_SIGNIN',  values)
 
     if(resp?.success) {
       messageApi.open({
         type: 'success',
         content: resp?.message
       })
+      await setCookies('auth-token', resp?.data?.result?.token)
+      router.push('/')
     } else {
       messageApi.open({
         type: 'error',
         content: resp?.message
       })
+      setSubmitLoader(false)
     }
-    setSubmitLoader(false)
   }
 
   return (
