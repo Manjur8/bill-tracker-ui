@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Button, Divider, Layout, Menu } from 'antd';
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import styles from './page.module.css'
 import { getCookies } from '@/utils/cookies';
@@ -13,13 +13,15 @@ const { Header, Content, Footer, Sider } = Layout;
 
 const CustomLayout = ({children}: {children: React.ReactNode}) => {
   const pathName = usePathname();
+  const router = useRouter();
   const [isMobileScreen, setIsMobileScreen] = useState(false)
   const [collapsed, setCollapsed] = useState(true)
   const isPublicPage = pathName.startsWith('/auth')
-  const [userInfo, setUserInfo] = useState({first_name: '', last_name: ''})
+  const initialUerInfo = {first_name: '', last_name: ''}
+  const [userInfo, setUserInfo] = useState(initialUerInfo)
   useEffect(() => {
     async function getUserInfo () {
-      const parsedData = JSON.parse(await getCookies('user-info') || '')
+      const parsedData = JSON.parse(await getCookies('user-info') || JSON.stringify(initialUerInfo))
        setUserInfo(parsedData)
     }
     getUserInfo()
@@ -81,7 +83,7 @@ const CustomLayout = ({children}: {children: React.ReactNode}) => {
                   </div>
                       <Divider className='mt-mb-4' />
                   </>
-                <Menu mode="inline" defaultSelectedKeys={['1']} items={SidebarMenus}/>
+                <Menu mode="inline" defaultSelectedKeys={['1']} items={SidebarMenus} onClick={({key }) => router.push(`/${key}`)}/>
                 {/* <Button
                 type="text"
                 icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
