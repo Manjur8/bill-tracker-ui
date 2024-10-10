@@ -1,6 +1,7 @@
 "use client"
 import React, { useState } from "react";
 import Image from 'next/image';
+// import json from "@/utils/cookies/DummyResponses.json"
 
 import styles from './page.module.css';
 
@@ -11,11 +12,14 @@ import { useRouter } from "next/navigation";
 import { APICall } from "@/utils/ApiCall";
 import { setCookies } from "@/utils/cookies";
 import { App_Name, Logo2 } from "@/contants/AppConstant";
+import { setUserInfo } from "@/utils/slices/userInfo";
+import { useDispatch } from "react-redux";
 
 const { Text, Title } = Typography;
 
 export default function SignIn() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [messageApi, contextHolder] = message.useMessage();
   const [submitLoader, setSubmitLoader] = useState(false)
 
@@ -54,15 +58,17 @@ export default function SignIn() {
 
   const handleSubmit = async(values: Record<string, unknown>) => {
     setSubmitLoader(true)
-    const resp = await APICall<{result: {token: string, first_name: string, last_name: string}}>('post', 'PUBLIC_USERS_SIGNIN',  values)
+    const resp = await APICall<{result: {token: string, user_info: { first_name: string, last_name: string}}}>('post', 'PUBLIC_USERS_SIGNIN',  values)
+    // const resp = json;
 
     if(resp?.success) {
       messageApi.open({
         type: 'success',
         content: resp?.message
       })
+      dispatch(setUserInfo({first_name: resp?.data?.result?.user_info?.first_name, last_name: resp?.data?.result?.user_info?.last_name}))
       await setCookies('auth-token', resp?.data?.result?.token)
-      await setCookies('user-info', JSON.stringify({first_name: resp?.data?.result?.first_name, last_name: resp?.data?.result?.last_name}))
+      // await setCookies('user-info', JSON.stringify({first_name: resp?.data?.result?.first_name, last_name: resp?.data?.result?.last_name}))
       router.push('/')
     } else {
       messageApi.open({

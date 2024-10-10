@@ -5,6 +5,7 @@ import "./antd-overwrite.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import CustomLayout from "@/components/Layout";
 
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -30,9 +31,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <AntdRegistry>
-          <CustomLayout>
-            {children}
-          </CustomLayout>
+            <CustomLayout>
+              {children}
+            </CustomLayout>
         </AntdRegistry>
       </body>
     </html>
