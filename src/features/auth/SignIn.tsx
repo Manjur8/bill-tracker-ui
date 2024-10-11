@@ -13,7 +13,7 @@ import { APICall } from "@/utils/ApiCall";
 import { setCookies } from "@/utils/cookies";
 import { App_Name, Logo2 } from "@/contants/AppConstant";
 import { setUserInfo } from "@/utils/slices/userInfo";
-import { useDispatch } from "react-redux";
+import { useDispatch } from "@/lib/hooks";
 
 const { Text, Title } = Typography;
 

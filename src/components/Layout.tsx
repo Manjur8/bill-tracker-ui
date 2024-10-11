@@ -4,8 +4,9 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { usePathname } from 'next/navigation';
 // import { getCookies } from '@/utils/cookies';
 import { Provider } from 'react-redux';
-import { store } from '@/app/store';
+import { persistor, store } from '@/lib/store';
 import PrivateLayout from './Layout/PrivateLayout';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const CustomLayout = ({children}: {children: React.ReactNode}) => {
   const pathName = usePathname();
@@ -21,19 +22,21 @@ const CustomLayout = ({children}: {children: React.ReactNode}) => {
 
   return (
     <Provider store={store}>
-      {
-        isPublicPage ? (
-          <AntdRegistry>
-              {children}
-          </AntdRegistry>
-        ) : (
-          <AntdRegistry>
-              <PrivateLayout>
-                {children}
-              </PrivateLayout>
-          </AntdRegistry>
-        )
-      }
+        <PersistGate loading={null} persistor={persistor}>
+          {
+            isPublicPage ? (
+              <AntdRegistry>
+                  {children}
+              </AntdRegistry>
+            ) : (
+              <AntdRegistry>
+                  <PrivateLayout>
+                    {children}
+                  </PrivateLayout>
+              </AntdRegistry>
+            )
+          }
+      </PersistGate>
     </Provider>
   )
 };

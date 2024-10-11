@@ -7,8 +7,8 @@ import Image from 'next/image';
 import styles from '../page.module.css'
 // import { getCookies } from '@/utils/cookies';
 import { App_Name, Logo1, Logo2, SidebarMenus } from '@/contants/AppConstant';
-import { useSelector } from 'react-redux';
-import { type RootState } from '@/app/store';
+import { type RootState } from '@/lib/store';
+import { useSelector } from '@/lib/hooks';
 
 const { Header, Content, Footer, Sider } = Layout;
 
