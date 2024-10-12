@@ -48,7 +48,7 @@ body {
   background-color: var(--background-white);
 }
 .mb-0 {
-  margin-bottom: 0px;
+  margin-bottom: 0px !important;
 }
 .mb-4 {
   margin-bottom: 4px;

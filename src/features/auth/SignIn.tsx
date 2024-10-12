@@ -58,7 +58,7 @@ export default function SignIn() {
 
   const handleSubmit = async(values: Record<string, unknown>) => {
     setSubmitLoader(true)
-    const resp = await APICall<{result: {token: string, user_info: { first_name: string, last_name: string}}}>('post', 'PUBLIC_USERS_SIGNIN',  values)
+    const resp = await APICall<{result: {token: string, first_name: string, last_name: string }}>('post', 'PUBLIC_USERS_SIGNIN',  values)
     // const resp = json;
 
     if(resp?.success) {
@@ -66,7 +66,7 @@ export default function SignIn() {
         type: 'success',
         content: resp?.message
       })
-      dispatch(setUserInfo({first_name: resp?.data?.result?.user_info?.first_name, last_name: resp?.data?.result?.user_info?.last_name}))
+      dispatch(setUserInfo({first_name: resp?.data?.result?.first_name, last_name: resp?.data?.result?.last_name}))
       await setCookies('auth-token', resp?.data?.result?.token)
       // await setCookies('user-info', JSON.stringify({first_name: resp?.data?.result?.first_name, last_name: resp?.data?.result?.last_name}))
       router.push('/')

@@ -9,6 +9,11 @@ export const App_Name = 'Bill Tracker';
 
 export const SidebarMenus = [
     {
+      key: 'register',
+      icon: React.createElement(UserOutlined),
+      label: `Register`,
+    },
+    {
       key: 'appartment',
       icon: React.createElement(UploadOutlined),
       label: `Appartment`,

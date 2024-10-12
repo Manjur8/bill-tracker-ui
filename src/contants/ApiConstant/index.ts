@@ -3,4 +3,7 @@
 export const API_ROUTES: Record<string, string> = {
     PUBLIC_USERS_SIGNUP: '/users/signup',
     PUBLIC_USERS_SIGNIN: '/auth/signin',
+
+    // =====Appartments===
+    APPARTMENT_REGISTER: '/apartments'
 }
