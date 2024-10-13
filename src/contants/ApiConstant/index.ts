@@ -5,5 +5,6 @@ export const API_ROUTES: Record<string, string> = {
     PUBLIC_USERS_SIGNIN: '/auth/signin',
 
     // =====Appartments===
-    APPARTMENT_REGISTER: '/apartments'
+    APPARTMENT_REGISTER: '/apartments',
+    MY_APARTMENT: '/apartments/my-apartments',
 }

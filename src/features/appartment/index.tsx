@@ -1,5 +1,5 @@
 "use client"
-import { Flex, Grid, message } from 'antd';
+import { message } from 'antd';
 import React, { useEffect, useState } from 'react'
 import CustomCards from '@/components/CustomCards';
 import { APICall } from '@/utils/ApiCall';
@@ -16,9 +16,9 @@ interface ApartmentsListTypes {
 }
 
 const Appartment = () => {
-    const { useBreakpoint } = Grid;
+    // const { useBreakpoint } = Grid;
     const [messageApi, contextHolder] = message.useMessage();
-    const screen = useBreakpoint()
+    // const screen = useBreakpoint()
     // console.log(screen)
     const [apartmentsList, setApartmentsList] = useState<ApartmentsListTypes[]>([])
     const [listLoader, setListLoader] = useState(false)
@@ -26,7 +26,7 @@ const Appartment = () => {
     useEffect(() => {
       const getApartmentsList = async() => {
         setListLoader(true)
-        const resp = await APICall<{result: ApartmentsListTypes[]}>('get', 'APPARTMENT_REGISTER');
+        const resp = await APICall<{result: ApartmentsListTypes[]}>('get', 'MY_APARTMENT');
 
         if(resp?.success) {
           setApartmentsList(resp?.data?.result)
