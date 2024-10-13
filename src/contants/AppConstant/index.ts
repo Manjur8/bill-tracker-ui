@@ -1,6 +1,7 @@
 import React from "react";
-import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { UploadOutlined, UserOutlined, VideoCameraOutlined, LogoutOutlined } from '@ant-design/icons';
 import logo from '@/app/favicon.ico'
+import type { MenuProps } from 'antd';
 import authSvg from '../../../public/images/auth.svg'
 
 
@@ -38,3 +39,20 @@ export const SidebarMenus = [
 export const Logo1 = logo; // used for profile image on sidebar
 
 export const Logo2 = authSvg;
+
+export const HeaderNavProfileMenus: MenuProps['items'] = [
+  {
+    key: 'my-profile',
+    label: 'My Profile',
+    // disabled: true,
+    icon: React.createElement(UserOutlined),
+  },
+  {
+    type: 'divider',
+  },
+  {
+    key: 'logout',
+    label: 'Logout',
+    icon: React.createElement(LogoutOutlined),
+  },
+];

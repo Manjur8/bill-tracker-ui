@@ -44,7 +44,7 @@ const Appartment = () => {
   return (
     <div>
         {contextHolder}
-        <Flex wrap gap={'middle'} justify={screen?.xs ? 'center' : 'normal'}>
+        <div className={'apartment-div'}>
             {
               listLoader ? <ApartmentCardLoader /> :
               apartmentsList?.map((item, index) => (
@@ -53,9 +53,7 @@ const Appartment = () => {
                 </div>
               ))
             }
-            {/* <CustomCards title='Star Appartment' description='Description of Star appartment' photo="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" /> */}
-            {/* <CustomCards title='Mannat Appartment' description='Description of Mannat appartment' photo="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" /> */}
-        </Flex>
+        </div>
     </div>
   )
 }
