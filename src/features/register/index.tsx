@@ -1,9 +1,12 @@
 "use client"
+import { useSelector } from '@/lib/hooks';
+import { RootState } from '@/lib/store';
 import { APICall } from '@/utils/ApiCall';
 import { Button, Form, Input, InputNumber, message, Space } from 'antd'
 import React, { useState } from 'react'
 
 const Register = () => {
+    const userInfo = useSelector((state: RootState) => state.userInfo)
     const [messageApi, contextHolder] = message.useMessage();
 
     const [submitLoader, setSubmitLoader] = useState(false);
@@ -18,7 +21,13 @@ const Register = () => {
                 country: values?.country,
                 locality: values?.locality,
                 pincode: values?.pincode
-            }
+            },
+            members: [
+                {
+                    user_id: userInfo.user_id,
+                    role: ["APPRESIDENT"]
+                }
+            ]
         }
 
         const resp = await APICall('post', 'APPARTMENT_REGISTER', payload)
