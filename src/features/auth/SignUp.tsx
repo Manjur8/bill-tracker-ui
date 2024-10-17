@@ -33,13 +33,14 @@ const SignUp = () => {
         type: 'success',
         content: resp?.message
       })
+      router.push('/auth/sign-in')
     } else {
       messageApi.open({
         type: 'error',
         content: resp?.message
       })
+      setSubmitLoader(false)
     }
-    setSubmitLoader(false)
 
   }
 

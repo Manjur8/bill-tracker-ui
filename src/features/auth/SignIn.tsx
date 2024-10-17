@@ -62,15 +62,23 @@ export default function SignIn() {
     // const resp = json;
 
     if(resp?.success) {
-      messageApi.open({
-        type: 'success',
-        content: resp?.message
-      })
       const result = resp?.data?.result
       dispatch(setUserInfo({first_name: result?.first_name, last_name: result?.last_name, user_id: result?.user_id, apartment_access: result?.apartment_access, flat_access: result?.flat_access}))
       await setCookies('auth-token', resp?.data?.result?.token)
       // await setCookies('user-info', JSON.stringify({first_name: resp?.data?.result?.first_name, last_name: resp?.data?.result?.last_name}))
-      router.push('/')
+      if(result?.apartment_access && result?.flat_access) {
+        // ======last vistited route from redux and redirect to the router ======
+
+
+        // =====if no last visited route====
+        router.push('/appartment')
+      } else if (result?.apartment_access) {
+        router.push('/appartment')
+      } else if (result?.flat_access) {
+        router.push('/flat')
+      } else {
+        router.push('/register')
+      }
     } else {
       messageApi.open({
         type: 'error',

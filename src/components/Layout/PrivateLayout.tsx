@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Button, Divider, Dropdown, Layout, Menu } from 'antd';
 import { useRouter } from 'next/navigation';
@@ -7,9 +7,10 @@ import Image from 'next/image';
 import styles from '../page.module.css'
 import type { DropdownProps, MenuProps } from 'antd';
 // import { getCookies } from '@/utils/cookies';
-import { App_Name, HeaderNavProfileMenus, Logo1, Logo2, SidebarMenus } from '@/contants/AppConstant';
+import { apartmentMenu, App_Name, HeaderNavProfileMenus, Logo1, Logo2 } from '@/contants/AppConstant';
 import { type RootState } from '@/lib/store';
 import { useSelector } from '@/lib/hooks';
+import { generateSideMenus } from '@/utils/features';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -19,6 +20,7 @@ const PrivateLayout = ({children}: {children: React.ReactNode}) => {
   const [collapsed, setCollapsed] = useState(true)
   const userInfo = useSelector((state: RootState) => state.userInfo)
   const [openProfileMenus, setOpenProfileMenus] = useState(false)
+  const [sideMenus, setSideMenus] = useState<typeof apartmentMenu[]>([])
 
   const onDropdownHandler: MenuProps['onClick'] = ({ key }) => {
     if(key!=='logout')setOpenProfileMenus(false)
@@ -30,6 +32,12 @@ const PrivateLayout = ({children}: {children: React.ReactNode}) => {
       setOpenProfileMenus(nextOpen);
     }
   };
+
+  useEffect(() => {
+    const finalSideMenus = generateSideMenus(userInfo?.apartment_access, userInfo?.flat_access)
+    setSideMenus(finalSideMenus)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <Layout>
@@ -84,7 +92,7 @@ const PrivateLayout = ({children}: {children: React.ReactNode}) => {
                         </div>
                             <Divider className='mt-mb-4' />
                         </>
-                      <Menu mode="inline" defaultSelectedKeys={['1']} items={SidebarMenus} onClick={({key }) => router.push(`/${key}`)}/>
+                      <Menu mode="inline" defaultSelectedKeys={['1']} items={sideMenus} onClick={({key }) => router.push(`/${key}`)}/>
                       {/* <Button
                       type="text"
                       icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
