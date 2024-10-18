@@ -29,3 +29,7 @@
   height: 72px !important;
   line-height: 18px !important;
 }
+
+.ant-btn-variant-text:not(:disabled):not(.ant-btn-disabled):hover {
+  background: transparent !important;
+}

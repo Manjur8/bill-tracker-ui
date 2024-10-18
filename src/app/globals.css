@@ -4,6 +4,7 @@
   --secondary-text: rgb(160, 164, 177);
   --background: #ffffff;
   --foreground: #171717;
+  --primary-theme: rgb(13 112 225);
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -63,7 +64,7 @@ body {
   margin: 4px;
 }
 .p-0 {
-  padding: 0;
+  padding: 0 !important;
 }
 .p-4 {
   padding: 4px;
@@ -88,6 +89,10 @@ body {
 .text-secondary {
   color: var(--secondary-text);
 }
+.theme-primary {
+  color: var(--primary-theme) !important;
+}
+
 .d-flex {
   display: flex;
 }
@@ -115,6 +120,12 @@ body {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.prevent-select {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }
 
 /* =======width======= */

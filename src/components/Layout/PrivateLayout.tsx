@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Button, Divider, Dropdown, Layout, Menu } from 'antd';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import styles from '../page.module.css'
 import type { DropdownProps, MenuProps } from 'antd';
@@ -16,11 +16,13 @@ const { Header, Content, Footer, Sider } = Layout;
 
 const PrivateLayout = ({children}: {children: React.ReactNode}) => {
   const router = useRouter();
+  const pathName = usePathname();
   const [isMobileScreen, setIsMobileScreen] = useState(false)
   const [collapsed, setCollapsed] = useState(true)
   const userInfo = useSelector((state: RootState) => state.userInfo)
   const [openProfileMenus, setOpenProfileMenus] = useState(false)
   const [sideMenus, setSideMenus] = useState<typeof apartmentMenu[]>([])
+  const [selectedMenu, setSelectedMenu] = useState<string[]>([])
 
   const onDropdownHandler: MenuProps['onClick'] = ({ key }) => {
     if(key!=='logout')setOpenProfileMenus(false)
@@ -38,6 +40,10 @@ const PrivateLayout = ({children}: {children: React.ReactNode}) => {
     setSideMenus(finalSideMenus)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    setSelectedMenu([pathName.slice(1, pathName.length)])
+  }, [pathName])
 
   return (
     <Layout>
@@ -92,7 +98,7 @@ const PrivateLayout = ({children}: {children: React.ReactNode}) => {
                         </div>
                             <Divider className='mt-mb-4' />
                         </>
-                      <Menu mode="inline" defaultSelectedKeys={['1']} items={sideMenus} onClick={({key }) => router.push(`/${key}`)}/>
+                      <Menu mode="inline" items={sideMenus} onClick={({key }) => router.push(`/${key}`)} selectedKeys={selectedMenu}/>
                       {/* <Button
                       type="text"
                       icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
