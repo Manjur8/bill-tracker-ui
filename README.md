@@ -39,3 +39,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 Docker build
     docker build -t apt-billing-ui .
     docker run -p 3000:3000 -v $(pwd):/usr/src/app --name apt-billing-ui -d apt-billing-ui
+    docker run -p 3000:3000 --name apt-billing-ui -d apt-billing-ui
