@@ -6,17 +6,7 @@ import { APICall } from '@/utils/ApiCall';
 import ApartmentCardLoader from './ApartmentCardLoader';
 import EmptyComponent from '@/components/EmptyComponent';
 import { useRouter } from 'next/navigation';
-
-interface ApartmentsListTypes {
-  _id: string,
-  name: string,
-  address: {
-      country: string,
-      city_village: string,
-      pincode: number,
-      locality: string,
-  }
-}
+import { ApartmentsListTypes } from '@/types/appartment';
 
 const Appartment = () => {
     const router = useRouter();

@@ -4,3 +4,18 @@ export interface CustomCardTypes {
     photo: string,
     onClickHandler: () => void
 }
+
+export interface ApartmentsListTypes {
+    _id: string,
+    name: string,
+    address: {
+        country: string,
+        city_village: string,
+        pincode: number,
+        locality: string,
+    }
+}
+
+export interface ApartmentDetailsTypes extends ApartmentsListTypes {
+    members: Record<string, unknown>,
+}
