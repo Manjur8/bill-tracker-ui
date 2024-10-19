@@ -8,6 +8,7 @@ import EmptyComponent from '@/components/EmptyComponent';
 import { useRouter } from 'next/navigation';
 
 interface ApartmentsListTypes {
+  _id: string,
   name: string,
   address: {
       country: string,
@@ -60,7 +61,7 @@ const Appartment = () => {
               apartmentsList?.length === 0 ? <EmptyComponent message='No Apartment Found!' buttonClickHandler={emptyComponentClickHandler} loading={emptyComponentLoading} /> :
               apartmentsList?.map((item, index) => (
                 <div key={index}>
-                  <CustomCards title={item?.name} description={`${item?.address?.locality}, ${item?.address?.city_village}`} photo="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />
+                  <CustomCards title={item?.name} description={`${item?.address?.locality}, ${item?.address?.city_village}`} photo="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" onClickHandler={() => router.push(`/appartment/${item?._id}`)} />
                 </div>
               ))
             }

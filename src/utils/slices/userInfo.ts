@@ -9,7 +9,7 @@ export interface UserInfoState {
   flat_access: boolean
 }
 
-const initialState: UserInfoState = {
+export const initialUserInfoState: UserInfoState = {
   first_name: '',
   last_name: '',
   user_id: '',
@@ -19,7 +19,7 @@ const initialState: UserInfoState = {
 
 export const userInfoSlice = createSlice({
   name: 'counter',
-  initialState,
+  initialState: initialUserInfoState,
   reducers: {
     setUserInfo: (state, action: PayloadAction<UserInfoState>) => {
       state.first_name = action.payload.first_name

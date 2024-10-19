@@ -5,7 +5,7 @@ import React from 'react'
 // import Meta from 'antd/es/card/Meta'
 import { CustomCardTypes } from '@/types/appartment'
 
-const CustomCards = ({title, description, photo}: CustomCardTypes) => {
+const CustomCards = ({title, description, photo, onClickHandler}: CustomCardTypes) => {
   const actions = [
     <EditOutlined key="edit" />,
     <SettingOutlined key="setting" />,
@@ -34,7 +34,7 @@ const CustomCards = ({title, description, photo}: CustomCardTypes) => {
   //     description={description}
   //   />
   // </Card>
-  <Card
+  <Card onClick={onClickHandler}
         actions={actions}
         style={{
           minWidth: 300,

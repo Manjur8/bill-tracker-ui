@@ -1,9 +1,10 @@
+import ApartmentDetails from '@/features/appartment/apartment-details'
 import React from 'react'
 
-const ApartmentDetails = () => {
+const ApartmentDetailsPage = () => {
   return (
-    <div>ApartmentDetails</div>
+    <ApartmentDetails />
   )
 }
 
-export default ApartmentDetails
+export default ApartmentDetailsPage

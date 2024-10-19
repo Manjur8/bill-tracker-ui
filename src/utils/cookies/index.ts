@@ -10,3 +10,7 @@ export const setCookies = async (key: string, value: string) => {
     const expireTime = 30*24*60*60
     await cookies().set(key, value, {httpOnly: true, maxAge: expireTime})
 }
+
+export const deleteCookies = async (key: string) => {
+    await cookies().delete(key);
+}
