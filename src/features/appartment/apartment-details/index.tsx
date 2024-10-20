@@ -72,9 +72,16 @@ const ApartmentDetails = () => {
       {
         key: '1',
         label: 'Name',
-        span: 3,
+        span: 2,
         contentStyle: editMode ? { paddingBottom: '0px'} : { },
         children: loader ? LoaderNode : editMode ? <FormItemNode formItemName={'name'} /> : apartmentDetails?.name || '-',
+      },
+      {
+        key: '6',
+        label: 'Available Fund',
+        span: 1,
+        // contentStyle: editMode ? { paddingBottom: '0px'} : { },
+        children: loader ? LoaderNode :  (apartmentDetails && apartmentDetails?.available_fund >= 0) ? <div className='fw-bold'>{apartmentDetails?.available_fund}</div> : '-',
       },
       {
         key: '2',

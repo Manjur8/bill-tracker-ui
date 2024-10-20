@@ -18,4 +18,5 @@ export interface ApartmentsListTypes {
 
 export interface ApartmentDetailsTypes extends ApartmentsListTypes {
     members: Record<string, unknown>,
+    available_fund: number
 }

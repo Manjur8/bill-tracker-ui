@@ -128,6 +128,10 @@ body {
   user-select: none; /* Standard syntax */
 }
 
+.fw-bold {
+  font-weight: bold;
+}
+
 /* =======width======= */
 .w-100{
   width: 100% !important;
