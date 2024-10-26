@@ -8,5 +8,6 @@ export const API_ROUTES: Record<string, string> = {
     // =====Appartments===
     APPARTMENT_REGISTER: '/apartments',
     MY_APARTMENT: '/apartments/my-apartments',
-    APARTMENT_DETAILS: '/apartments/apartment_detail'
+    APARTMENT_DETAILS: '/apartments/apartment_detail',
+    APARTMENT_MEMBERS: '/apartments/members',
 }

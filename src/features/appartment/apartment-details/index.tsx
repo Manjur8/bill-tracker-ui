@@ -1,10 +1,11 @@
 "use client"
 import { ApartmentDetailsTypes } from '@/types/appartment';
 import { APICall } from '@/utils/ApiCall';
-import { Button, Descriptions, Form, Input, message, Skeleton } from 'antd';
+import { Button, Descriptions, Form, Input, message, Skeleton, Tabs } from 'antd';
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import type { DescriptionsProps } from 'antd';
+import MembersTable from './members-table';
 
 const ApartmentDetails = () => {
   const params = useParams();
@@ -123,9 +124,8 @@ const ApartmentDetails = () => {
     country: apartmentDetails?.address?.country || '',
   }
 
-  return (
-    <div className='bg-white p-16'>
-      {
+  const tabs = [{id: 'details', title: 'Details', children: <>
+  {
         loader ? <Descriptions
         bordered
         title="Apartment Details"
@@ -134,7 +134,7 @@ const ApartmentDetails = () => {
         items={getItems(loader)}
       /> : <Form form={form} initialValues={initialValues} onFinish={(val) => {console.log(val, 'submit'); setEditMode(false)}}>
               <Descriptions
-                bordered
+                // bordered
                 title="Apartment Details"
                 size={'default'}
                 extra={editMode ? <Form.Item><Button type="primary" htmlType='submit'>Update</Button></Form.Item> : <Button type="primary" htmlType='button' onClick={() => setEditMode(true)}>Edit</Button>}
@@ -142,7 +142,22 @@ const ApartmentDetails = () => {
               />
         </Form>
       }
-      
+  </>}, {id: 'members', title: 'Members', children: <MembersTable />}, {id: 'flats', title: 'Flats', children: 'Flats tab'}];
+
+  return (
+    <div className='bg-white p-16'>      
+      {/* <div className='d-flex justify-content-center align-items-center'> */}
+        <Tabs centered
+          tabPosition={window.innerWidth < 768 ? 'bottom' : 'left'}
+          items={tabs.map((tabMenu) => {
+            return {
+              label: tabMenu.title,
+              key: tabMenu.id,
+              children: tabMenu.children,
+            };
+          })}
+        />
+      {/* </div> */}
     </div>
   )
 }
