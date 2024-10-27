@@ -3,6 +3,7 @@ import { message, Space, Table, Tag } from 'antd'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import type { TableProps } from 'antd';
+import CustomCards from '@/components/CustomCards';
 
 interface DataType {
   key: string;
@@ -13,6 +14,7 @@ interface DataType {
 
 const MembersTable = () => {
     const params = useParams()
+    const isMobile = window.innerWidth < 576
     const [tableData, setTableData] = useState<DataType[]>([])
 
     const columns: TableProps<DataType>['columns'] = [
@@ -83,7 +85,21 @@ const MembersTable = () => {
     }, []) //eslint-disable-line
   return (
     <div>
-        <Table<DataType> columns={columns} dataSource={tableData} pagination={false} />
+        {
+          isMobile ? 
+            tableData?.map((member, index) => (
+              <CustomCards key={index} title={member?.name} description={<div>
+              <div>
+                  {
+                    member?.roles?.join(', ')
+                  }
+              </div>
+              <div>{member?.phone}</div>
+              </div>} photo="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" onClickHandler={() => {}} />
+            ))
+          
+            : <Table<DataType> columns={columns} dataSource={tableData} pagination={false} />
+        }
     </div>
   )
 }

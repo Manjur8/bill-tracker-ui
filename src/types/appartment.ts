@@ -1,6 +1,6 @@
 export interface CustomCardTypes {
     title: string,
-    description: string,
+    description: string | React.ReactElement,
     photo: string,
     onClickHandler: () => void
 }

@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import type { DescriptionsProps } from 'antd';
 import MembersTable from './members-table';
+import ApartmentFlats from './apartment-flats';
 
 const ApartmentDetails = () => {
   const params = useParams();
@@ -142,7 +143,7 @@ const ApartmentDetails = () => {
               />
         </Form>
       }
-  </>}, {id: 'members', title: 'Members', children: <MembersTable />}, {id: 'flats', title: 'Flats', children: 'Flats tab'}];
+  </>}, {id: 'members', title: 'Members', children: <MembersTable />}, {id: 'flats', title: 'Flats', children: <ApartmentFlats />}];
 
   return (
     <div className='bg-white p-16'>      
