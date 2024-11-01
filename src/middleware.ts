@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
     const authToken = request.cookies.get("auth-token")
 
     // const isProtectedRoute = protectedRoutes.includes(pathname)
-    const isPublicRoute = pathname.startsWith("/auth")
+    const isPublicRoute = pathname.startsWith("/auth") && !pathname.includes("/logout")
 
     // =====Redirect to /sign-in if the user is not authenticated=====
     if (!isPublicRoute && !authToken) {

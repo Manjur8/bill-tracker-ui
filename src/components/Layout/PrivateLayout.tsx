@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
-import { Button, Divider, Dropdown, Layout, Menu, message } from 'antd';
+import { Button, Divider, Dropdown, Layout, Menu } from 'antd';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import styles from '../page.module.css'
@@ -9,18 +9,14 @@ import type { DropdownProps, MenuProps } from 'antd';
 // import { getCookies } from '@/utils/cookies';
 import { apartmentMenu, App_Name, HeaderNavProfileMenus, Logo1, Logo2 } from '@/contants/AppConstant';
 import { type RootState } from '@/lib/store';
-import { useDispatch, useSelector } from '@/lib/hooks';
+import { useSelector } from '@/lib/hooks';
 import { generateSideMenus } from '@/utils/features';
-import { APICall } from '@/utils/ApiCall';
-import { initialUserInfoState, setUserInfo } from '@/utils/slices/userInfo';
-import { deleteCookies } from '@/utils/cookies';
 
 const { Header, Content, Footer, Sider } = Layout;
 
 const PrivateLayout = ({children}: {children: React.ReactNode}) => {
   const router = useRouter();
   const pathName = usePathname();
-  const dispatch = useDispatch();
   const [isMobileScreen, setIsMobileScreen] = useState(false)
   const [collapsed, setCollapsed] = useState(true)
   const userInfo = useSelector((state: RootState) => state.userInfo)
@@ -29,17 +25,8 @@ const PrivateLayout = ({children}: {children: React.ReactNode}) => {
   const [selectedMenu, setSelectedMenu] = useState<string[]>([])
   // const [logoutLoading, setLogoutLoading] = useState(false)
 
-  const logoutHandler = async () => {
-    // setLogoutLoading(true)
-    const resp = await APICall('delete', 'USERS_SIGNOUT');
-    if(resp?.success) {
-      dispatch(setUserInfo(initialUserInfoState))
-      await deleteCookies('auth-token')
-      router.push('/auth/sign-in')
-    } else {
-      message.error(resp?.message)
-      // setLogoutLoading(false)
-    }
+  const logoutHandler = () => {
+    router.push('/auth/logout')
   }
 
   const onDropdownHandler: MenuProps['onClick'] = async ({ key }) => {
@@ -47,7 +34,7 @@ const PrivateLayout = ({children}: {children: React.ReactNode}) => {
     console.log(`Click on item ${key}`);
     switch(key) {
       case 'logout': {
-        await logoutHandler();
+         logoutHandler();
         // cookies.remove('token')
         // router.push('/login')
         break;
