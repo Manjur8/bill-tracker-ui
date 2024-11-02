@@ -8,6 +8,7 @@ export interface CustomCardTypes {
 export interface ApartmentsListTypes {
     _id: string,
     name: string,
+    available_fund: number
     address: {
         country: string,
         city_village: string,
@@ -18,5 +19,4 @@ export interface ApartmentsListTypes {
 
 export interface ApartmentDetailsTypes extends ApartmentsListTypes {
     members: Record<string, unknown>,
-    available_fund: number
 }

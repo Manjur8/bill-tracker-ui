@@ -7,9 +7,12 @@ import ApartmentCardLoader from './ApartmentCardLoader';
 import EmptyComponent from '@/components/EmptyComponent';
 import { useRouter } from 'next/navigation';
 import { ApartmentsListTypes } from '@/types/appartment';
+import { useDispatch } from 'react-redux';
+import { setApartmentDetails } from '@/utils/slices/apartmentDetails';
 
 const Appartment = () => {
     const router = useRouter();
+    const dispatch = useDispatch();
     // const { useBreakpoint } = Grid;
     const [messageApi, contextHolder] = message.useMessage();
     // const screen = useBreakpoint()
@@ -42,6 +45,12 @@ const Appartment = () => {
       setEmptyComponentLoading(true)
       router.push('/register');
     }
+
+    const apartmentClickHandler = (item: ApartmentsListTypes) => {
+        dispatch(setApartmentDetails({ _id: item?._id, name: item?.name, available_fund: item?.available_fund, address: item?.address }))
+        router.push(`/appartment/${item?._id}`)
+    }
+
   return (
     <div>
         {contextHolder}
@@ -51,7 +60,7 @@ const Appartment = () => {
               apartmentsList?.length === 0 ? <EmptyComponent message='No Apartment Found!' buttonClickHandler={emptyComponentClickHandler} loading={emptyComponentLoading} /> :
               apartmentsList?.map((item, index) => (
                 <div key={index}>
-                  <CustomCards title={item?.name} description={`${item?.address?.locality}, ${item?.address?.city_village}`} photo="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" onClickHandler={() => router.push(`/appartment/${item?._id}`)} />
+                  <CustomCards title={item?.name} description={`${item?.address?.locality}, ${item?.address?.city_village}`} photo="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" onClickHandler={() => apartmentClickHandler(item)} />
                 </div>
               ))
             }

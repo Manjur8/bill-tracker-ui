@@ -1,65 +1,67 @@
 "use client"
-import { ApartmentDetailsTypes } from '@/types/appartment';
-import { APICall } from '@/utils/ApiCall';
-import { Button, Descriptions, Form, Input, message, Skeleton, Tabs } from 'antd';
-import { useParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+// import { ApartmentDetailsTypes } from '@/types/appartment';
+// import { APICall } from '@/utils/ApiCall';
+import { Button, Descriptions, Form, Input, Skeleton, Tabs } from 'antd';
+// import { useParams } from 'next/navigation'
+import React, { useState } from 'react'
 import type { DescriptionsProps } from 'antd';
 import MembersTable from './members-table';
 import ApartmentFlats from './apartment-flats';
+import { useSelector } from '@/lib/hooks';
+import { RootState } from '@/lib/store';
 
 const ApartmentDetails = () => {
-  const params = useParams();
+  // const params = useParams();
 
   const [form] = Form.useForm();
+  const apartmentDetails = useSelector((state: RootState) => state.apartmentDetails)
 
-  const [apartmentDetails, setApartmentDetails] = useState<ApartmentDetailsTypes | null>(null)
-  const [loader, setLoader] = useState(true)
+  // const [apartmentDetails, setApartmentDetails] = useState<ApartmentDetailsTypes>(cachedApartmentDetails)
+  // const [loader, setLoader] = useState(true)
   const [editMode, setEditMode] = useState(false)
 
-  useEffect(() => {
-    const getApartmentDetails = async () => {
-        const apartmentDetailsResponse = await APICall<{result: ApartmentDetailsTypes}>('get', `APARTMENT_DETAILS?apartment_id=${params.id}`)
-        // const apartmentDetailsResponse = {
-        //   message: "Success",
-        //   success: true,
-        //   data: {
-        //     result: {
-        //       _id: "671389ec0caa1a80b27860ac",
-        //       name: "New Castle",
-        //       address: {
-        //         city_village: "Kolkata",
-        //         country: "India",
-        //         locality: "AJC Roade",
-        //         pincode: 700137
-        //       },
-        //       created_by: "670bcfb70ef5f5cd1ab6043a",
-        //       available_fund: 0,
-        //       created_at: "2024-10-19T10:28:13.565000",
-        //       members: {
-        //         user_id: "670bcfb70ef5f5cd1ab6043a",
-        //         role: [
-        //           "671389ec0caa1a80b27860ad"
-        //         ]
-        //       }
-        //     }
-        //   }
-        // }
+  // useEffect(() => {
+  //   const getApartmentDetails = async () => {
+  //       // const apartmentDetailsResponse = await APICall<{result: ApartmentDetailsTypes}>('get', `APARTMENT_DETAILS?apartment_id=${params.id}`)
+  //       // const apartmentDetailsResponse = {
+  //       //   message: "Success",
+  //       //   success: true,
+  //       //   data: {
+  //       //     result: {
+  //       //       _id: "671389ec0caa1a80b27860ac",
+  //       //       name: "New Castle",
+  //       //       address: {
+  //       //         city_village: "Kolkata",
+  //       //         country: "India",
+  //       //         locality: "AJC Roade",
+  //       //         pincode: 700137
+  //       //       },
+  //       //       created_by: "670bcfb70ef5f5cd1ab6043a",
+  //       //       available_fund: 0,
+  //       //       created_at: "2024-10-19T10:28:13.565000",
+  //       //       members: {
+  //       //         user_id: "670bcfb70ef5f5cd1ab6043a",
+  //       //         role: [
+  //       //           "671389ec0caa1a80b27860ad"
+  //       //         ]
+  //       //       }
+  //       //     }
+  //       //   }
+  //       // }
         
-        if(apartmentDetailsResponse.success) {
-          setApartmentDetails(apartmentDetailsResponse?.data?.result)
-        } else {
-            message.error(apartmentDetailsResponse?.message)
-        }
-        setLoader(false)
-    }
+  //       // if(apartmentDetailsResponse.success) {
+  //       //   setApartmentDetails(apartmentDetailsResponse?.data?.result)
+  //       // } else {
+  //       //     message.error(apartmentDetailsResponse?.message)
+  //       // }
+  //       // setLoader(false)
+  //   }
     
-    // Fetch apartment details when the component mounts
-    getApartmentDetails()
-  }, [params.id])
+  //   // Fetch apartment details when the component mounts
+  //   getApartmentDetails()
+  // }, [params.id])
 
-  const LoaderNode = <Skeleton.Node active={true} style={{ height: 24 }}
-/>
+  const LoaderNode = <Skeleton.Node active={true} style={{ height: 24 }} />
 
   const FormItemNode = ({formItemName}: {formItemName: string}) => {
     return (
@@ -127,19 +129,20 @@ const ApartmentDetails = () => {
 
   const tabs = [{id: 'details', title: 'Details', children: <>
   {
-        loader ? <Descriptions
-        bordered
-        title="Apartment Details"
-        size={'default'}
-        extra={<Button type="primary">Edit</Button>}
-        items={getItems(loader)}
-      /> : <Form form={form} initialValues={initialValues} onFinish={(val) => {console.log(val, 'submit'); setEditMode(false)}}>
+      //   loader ? <Descriptions
+      //   bordered
+      //   title="Apartment Details"
+      //   size={'default'}
+      //   extra={<Button type="primary">Edit</Button>}
+      //   items={getItems(loader)}
+      // /> : 
+      <Form form={form} initialValues={initialValues} onFinish={(val) => {console.log(val, 'submit'); setEditMode(false)}}>
               <Descriptions
                 // bordered
                 title="Apartment Details"
                 size={'default'}
                 extra={editMode ? <Form.Item><Button type="primary" htmlType='submit'>Update</Button></Form.Item> : <Button type="primary" htmlType='button' onClick={() => setEditMode(true)}>Edit</Button>}
-                items={getItems(loader)}
+                items={getItems(false)}
               />
         </Form>
       }

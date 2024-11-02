@@ -1,4 +1,4 @@
-import userInfoReducer from '@/utils/slices/userInfo'
+import { apartDetailsReducer, userInfoReducer } from '@/utils/slices';
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
 // ========import for persists=====
@@ -12,7 +12,8 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-  userInfo: userInfoReducer
+  userInfo: userInfoReducer,
+  apartmentDetails: apartDetailsReducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
