@@ -2,7 +2,8 @@ export interface CustomCardTypes {
     title: string,
     description: string | React.ReactElement,
     photo: string,
-    onClickHandler: () => void
+    onClickHandler: () => void,
+    actions?: React.ReactElement[]
 }
 
 export interface ApartmentsListTypes {

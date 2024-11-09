@@ -11,4 +11,9 @@ export const API_ROUTES: Record<string, string> = {
     APARTMENT_DETAILS: '/apartments/apartment_detail',
     APARTMENT_MEMBERS: '/apartments/members',
     APARTMENT_FLATS: '/apartments/flats',
+    APARTMENT_ADD_MEMBER: '/apartments/add-member',
+    APARTMENT_MEMBERS_DELETE: '/apartments/remove-member',
+
+    // ========Users========
+    USERS: '/users/list',
 }

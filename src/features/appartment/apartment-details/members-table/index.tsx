@@ -1,9 +1,12 @@
 import { APICall } from '@/utils/ApiCall'
-import { message, Space, Table, Tag } from 'antd'
+import { DeleteOutlined } from '@ant-design/icons'
+import { Button, message, Space, Table, Tag } from 'antd'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import type { TableProps } from 'antd';
 import CustomCards from '@/components/CustomCards';
+import AddMemberModal from './AddMemberModal';
+import DeleteModdal from '@/components/DeleteModal';
 
 interface DataType {
   key: string;
@@ -16,6 +19,11 @@ const MembersTable = () => {
     const params = useParams()
     const isMobile = window.innerWidth < 576
     const [tableData, setTableData] = useState<DataType[]>([])
+
+    const [addMemberModal, setAddMemberModal] = useState(false)
+    const [deleteModdal, setDeleteModal] = useState(false)
+    const [deleteLoader, setDeleteLoader] = useState(false)
+    const [deleteData, setDeleteData] = useState<DataType | null>(null)
 
     const columns: TableProps<DataType>['columns'] = [
         {
@@ -52,10 +60,10 @@ const MembersTable = () => {
         {
           title: '',
           key: 'action',
-          render: () => (
+          render: (record) => (
             <Space size="middle">
               {/* <a>Invite {record.name}</a> */}
-              <a style={{color: '#f5222d'}}>Remove</a>
+              <a style={{color: '#f5222d'}} onClick={() =>  {setDeleteData(record); setDeleteModal(true)}}>Remove</a>
             </Space>
           ),
         },
@@ -66,29 +74,53 @@ const MembersTable = () => {
                 key: member?.user_detail?._id,
                 name: `${member?.user_detail?.first_name} ${member?.user_detail?.middle_name || ''} ${member?.user_detail?.last_name || ''}`,
                 phone: member?.user_detail?.phone,
-                roles: member.roles.map(role => role?.name)
+                roles: member?.roles?.map(role => role?.name)
             }
         ))
     }
-    useEffect(() => {
-        const membersApiCall = async () => {
-            const resp = await APICall<{result: MembersResponseType[]}>('get', `APARTMENT_MEMBERS?apartment_id=${params.id}`)
+    const membersApiCall = async () => {
+        const resp = await APICall<{result: MembersResponseType[]}>('get', `APARTMENT_MEMBERS?apartment_id=${params.id}`)
 
-            if(resp?.success) {
-                setTableData(membersRespInterceptor(resp?.data?.result))
+        if(resp?.success) {
+            setTableData(membersRespInterceptor(resp?.data?.result))
 
-            } else {
-                message.error(resp?.message)
-            }
+        } else {
+            message.error(resp?.message)
         }
+    }
+    useEffect(() => {
         membersApiCall()
     }, []) //eslint-disable-line
+
+    const deleteMember = async () => {
+      setDeleteLoader(true)
+      const payload = {
+        user_id: deleteData?.key,
+        apartment_id: params.id
+      }
+      const resp = await APICall('post', 'APARTMENT_MEMBERS_DELETE', payload)
+      setDeleteLoader(false)
+      if(resp?.success) {
+        message.success(resp?.message)
+        setTableData(tableData.filter(member => member.key!== deleteData?.key))
+        setDeleteModal(false)
+        setDeleteData(null)
+      } else {
+        message.error(resp?.message)
+      }
+      setDeleteLoader(false)
+    }
   return (
     <div>
+      <>
+              <div className='d-flex justify-content-between align-items-center'>
+                <h3>Members</h3>
+                <Button type='primary' onClick={() => setAddMemberModal(true)}>Add Member</Button>
+              </div>
         {
           isMobile ? 
             tableData?.map((member, index) => (
-              <CustomCards key={index} title={member?.name} description={<div>
+              <CustomCards key={index} title={member?.name} actions={[<DeleteOutlined key={'delete-icon'} onClick={() =>  {setDeleteData(member); setDeleteModal(true)}}/>]} description={<div>
               <div>
                   {
                     member?.roles?.join(', ')
@@ -98,8 +130,12 @@ const MembersTable = () => {
               </div>} photo="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" onClickHandler={() => {}} />
             ))
           
-            : <Table<DataType> columns={columns} dataSource={tableData} pagination={false} />
+            :
+              <Table<DataType> columns={columns} dataSource={tableData} pagination={false} />
         }
+      </>
+        <AddMemberModal open={addMemberModal} onOk={() => {membersApiCall(); setAddMemberModal(false)}} onCancel={() => setAddMemberModal(false)} />
+        <DeleteModdal open={deleteModdal} handleOk={deleteMember} handleCancel={() => {setDeleteModal(false); setDeleteData(null)}} submitLoader={deleteLoader} title={'Member'} />
     </div>
   )
 }
