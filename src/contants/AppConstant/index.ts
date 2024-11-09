@@ -29,13 +29,13 @@ export const defaultMenus = [
 export const apartmentMenu = {
   key: 'appartment',
   icon: React.createElement(UploadOutlined),
-  label: `Apartment`,
+  label: `My Apartment(s)`,
 }
 
 export const flatMenu = {
   key: 'flat',
   icon: React.createElement(VideoCameraOutlined),
-  label: `Flat`,
+  label: `My Flat(s)`,
 }
 
 export const Logo1 = logo; // used for profile image on sidebar

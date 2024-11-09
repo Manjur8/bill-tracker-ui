@@ -1,5 +1,5 @@
 import { APICall } from '@/utils/ApiCall'
-import { DeleteOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { Button, message, Space, Table, Tag } from 'antd'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -8,11 +8,11 @@ import CustomCards from '@/components/CustomCards';
 import AddMemberModal from './AddMemberModal';
 import DeleteModdal from '@/components/DeleteModal';
 
-interface DataType {
+export interface DataType {
   key: string;
   name: string;
   phone: string;
-  roles: string[];
+  roles: RolesType[];
 }
 
 const MembersTable = () => {
@@ -24,6 +24,8 @@ const MembersTable = () => {
     const [deleteModdal, setDeleteModal] = useState(false)
     const [deleteLoader, setDeleteLoader] = useState(false)
     const [deleteData, setDeleteData] = useState<DataType | null>(null)
+
+    const [editMemberData, setEditMemberData] = useState<DataType | null>(null)
 
     const columns: TableProps<DataType>['columns'] = [
         {
@@ -44,13 +46,13 @@ const MembersTable = () => {
           render: (_, { roles }) => (
             <>
               {roles.map((role) => {
-                let color = role.length > 5 ? 'geekblue' : 'green';
-                if (role === 'loser') {
+                let color = role?.name?.length > 5 ? 'geekblue' : 'green';
+                if (role?.name === 'loser') {
                   color = 'volcano';
                 }
                 return (
-                  <Tag color={color} key={role}>
-                    {role}
+                  <Tag color={color} key={role?._id}>
+                    {role?.name}
                   </Tag>
                 );
               })}
@@ -63,7 +65,8 @@ const MembersTable = () => {
           render: (record) => (
             <Space size="middle">
               {/* <a>Invite {record.name}</a> */}
-              <a style={{color: '#f5222d'}} onClick={() =>  {setDeleteData(record); setDeleteModal(true)}}>Remove</a>
+              <a onClick={() =>  {setEditMemberData(record); setAddMemberModal(true)}}><EditOutlined /></a>
+              <a style={{color: '#f5222d'}} onClick={() =>  {setDeleteData(record); setDeleteModal(true)}}><DeleteOutlined /></a>
             </Space>
           ),
         },
@@ -74,7 +77,7 @@ const MembersTable = () => {
                 key: member?.user_detail?._id,
                 name: `${member?.user_detail?.first_name} ${member?.user_detail?.middle_name || ''} ${member?.user_detail?.last_name || ''}`,
                 phone: member?.user_detail?.phone,
-                roles: member?.roles?.map(role => role?.name)
+                roles: member?.roles
             }
         ))
     }
@@ -115,15 +118,18 @@ const MembersTable = () => {
       <>
               <div className='d-flex justify-content-between align-items-center'>
                 <h3>Members</h3>
-                <Button type='primary' onClick={() => setAddMemberModal(true)}>Add Member</Button>
+                <Button type='primary' onClick={() => {setEditMemberData(null); setAddMemberModal(true)}}>Add Member</Button>
               </div>
         {
           isMobile ? 
             tableData?.map((member, index) => (
-              <CustomCards key={index} title={member?.name} actions={[<DeleteOutlined key={'delete-icon'} onClick={() =>  {setDeleteData(member); setDeleteModal(true)}}/>]} description={<div>
+              <CustomCards key={index} title={member?.name} actions={[
+                <EditOutlined key={'edit-icon'} onClick={() =>  {setEditMemberData(member); setAddMemberModal(true)}}/>,
+                <DeleteOutlined key={'delete-icon'} onClick={() =>  {setDeleteData(member); setDeleteModal(true)}}/>
+              ]} description={<div>
               <div>
                   {
-                    member?.roles?.join(', ')
+                    member?.roles?.map(i => i?.name)?.join(', ')
                   }
               </div>
               <div>{member?.phone}</div>
@@ -134,7 +140,7 @@ const MembersTable = () => {
               <Table<DataType> columns={columns} dataSource={tableData} pagination={false} />
         }
       </>
-        <AddMemberModal open={addMemberModal} onOk={() => {membersApiCall(); setAddMemberModal(false)}} onCancel={() => setAddMemberModal(false)} />
+        <AddMemberModal open={addMemberModal} onOk={() => {membersApiCall(); setAddMemberModal(false)}} onCancel={() => setAddMemberModal(false)} data={editMemberData} />
         <DeleteModdal open={deleteModdal} handleOk={deleteMember} handleCancel={() => {setDeleteModal(false); setDeleteData(null)}} submitLoader={deleteLoader} title={'Member'} />
     </div>
   )
@@ -150,5 +156,9 @@ interface MembersResponseType {
         last_name: string,
         phone: string,
     }
-    roles: {_id: string, name: string}[]
+    roles: RolesType[]
+}
+
+interface RolesType {
+  _id: string, name: string
 }

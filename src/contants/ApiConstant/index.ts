@@ -16,4 +16,7 @@ export const API_ROUTES: Record<string, string> = {
 
     // ========Users========
     USERS: '/users/list',
+    
+    //=======rules======== 
+    RULES_PERMISSIONS: '/rules-and-permissions',
 }
