@@ -33,7 +33,8 @@ export async function makeRequest<T>(httpType: httpVerb, route: string, payload 
     } catch (err) {
         const error = err as AxiosError<Error>;
         const status = error?.response?.status || error?.status || (err as CustomError)?.customStatus || 500;
-        const message = parseMsgObj(error?.message) || (err as CustomError)?.customMsg || 'Something went wrong!';
+        // const message = parseMsgObj(error?.message) || (err as CustomError)?.customMsg || 'Something went wrong!';
+        const message = parseMsgObj(error.response?.data?.message) || error?.message || (err as CustomError)?.customMsg || 'Something went wrong!';
 
         console.log('API calling Error => ', message, error.response?.data, status, isRefreshTokenCalled);
 

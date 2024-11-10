@@ -7,6 +7,8 @@ import type { TableProps } from 'antd';
 import CustomCards from '@/components/CustomCards';
 import AddMemberModal from './AddMemberModal';
 import DeleteModdal from '@/components/DeleteModal';
+import { useSelector } from '@/lib/hooks'
+import { RootState } from '@/lib/store'
 
 export interface DataType {
   key: string;
@@ -17,6 +19,7 @@ export interface DataType {
 
 const MembersTable = () => {
     const params = useParams()
+    const userInfo = useSelector((state: RootState) => state.userInfo)
     const isMobile = window.innerWidth < 576
     const [tableData, setTableData] = useState<DataType[]>([])
 
@@ -32,10 +35,11 @@ const MembersTable = () => {
           title: 'Name',
           dataIndex: 'name',
           key: 'name',
-          render: (text) => <a>{text}</a>,
+          render: (text, {key}) => <a>{text} {key === userInfo?.user_id && '(You)'}</a>,
+          sorter: (a, b) => a.name.localeCompare(b.name)
         },
         {
-          title: 'Phone Number',
+          title: 'Phone',
           dataIndex: 'phone',
           key: 'phone',
         },
@@ -62,13 +66,15 @@ const MembersTable = () => {
         {
           title: '',
           key: 'action',
-          render: (record) => (
-            <Space size="middle">
-              {/* <a>Invite {record.name}</a> */}
-              <a onClick={() =>  {setEditMemberData(record); setAddMemberModal(true)}}><EditOutlined /></a>
-              <a style={{color: '#f5222d'}} onClick={() =>  {setDeleteData(record); setDeleteModal(true)}}><DeleteOutlined /></a>
-            </Space>
-          ),
+          render: (record) => {
+            return record?.key !== userInfo?.user_id && (
+              <Space size="middle">
+                {/* <a>Invite {record.name}</a> */}
+                <a onClick={() =>  {setEditMemberData(record); setAddMemberModal(true)}}><EditOutlined /></a>
+                <a style={{color: '#f5222d'}} onClick={() =>  {setDeleteData(record); setDeleteModal(true)}}><DeleteOutlined /></a>
+              </Space>
+            )
+          },
         },
       ];
     const membersRespInterceptor = (membersData: MembersResponseType[]) => {

@@ -23,7 +23,7 @@ const AddMemberModal = ({open, onOk, onCancel, data}: AddMemberModalProps) => {
     useEffect(() => {
         const rulesPermissionsApiCall = async () => {
             setRolesOptionLoader(true)
-            const rulesResp = await APICall<{result: Array<{name: string, _id: string}>}>('get', 'RULES_PERMISSIONS');
+            const rulesResp = await APICall<{result: Array<{name: string, _id: string}>}>('get', `RULES_PERMISSIONS?match={"apartment_id":"${params.id}"}`);
     
             if(rulesResp.success) {
                 const rulesPermissions = rulesResp?.data?.result.map(
@@ -37,7 +37,7 @@ const AddMemberModal = ({open, onOk, onCancel, data}: AddMemberModalProps) => {
             setRolesOptionLoader(false)
         }
         rulesPermissionsApiCall()
-    }, [])
+    }, [params.id])
 
     async function fetchUserList(username: string): Promise<UserValue[]> {
         let updatedResp: UserValue[] = []
@@ -60,7 +60,7 @@ const AddMemberModal = ({open, onOk, onCancel, data}: AddMemberModalProps) => {
 
       const handleSubmit = async (values: Record<string, unknown>) => {
         setSubmitLoader(true)
-        const payload = {...values, apartment_id: params?.id, user_id: data ? (values as {user_id: [string]})?.user_id[0] : (values as {user_id: [{value: string}]})?.user_id[0]?.value}
+        const payload = {...values, apartment_id: params?.id, user_ids: data ? (values as {user_id: [string]})?.user_id : (values as {user_id: [{value: string}]})?.user_id?.map(item => (item?.value))}
         // Add or edit member logic goes here
         const resp = await APICall('patch', 'APARTMENT_ADD_MEMBER', payload)
         if(resp?.success) {
