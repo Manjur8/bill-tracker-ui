@@ -12,20 +12,21 @@ const ApartmentFlats = () => {
 
     const [openAddFlatModal, setOpenAddFlatModal] = useState(false)
 
-    useEffect(() => {
-        const flatsApiCall = async () => {
-            const resp = await APICall<{result: ApartmentFlatsTypes[]}>('get', `APARTMENT_FLATS?apartment_id=${params.id}`)
+    const flatsApiCall = async () => {
+        const resp = await APICall<{result: ApartmentFlatsTypes[]}>('get', `APARTMENT_FLATS?apartment_id=${params.id}`)
 
-            if(resp?.success) {
-                setApartmentFlats(resp?.data?.result)
-            } else {
-                message.error(resp?.message)
-            }
+        if(resp?.success) {
+            setApartmentFlats(resp?.data?.result)
+        } else {
+            message.error(resp?.message)
         }
+    }
+    useEffect(() => {
         flatsApiCall()
     }, []) //eslint-disable-line
 
     const handleOkAddFlatModal = () => {
+        flatsApiCall()
         setOpenAddFlatModal(false)
     }
   return (

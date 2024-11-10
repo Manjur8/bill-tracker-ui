@@ -12,7 +12,7 @@ const AddFlatModal = ({open, handleOk, handleCancel, data}: ModalTypes<null | un
     const handleSubmit = async (values: Record<string, unknown>) => {
         setConfirmLoading(true)
         const payload = { ...values, apartment_id: params.id }
-        const resp = await APICall('post', 'APARTMENT_FLATS', payload);
+        const resp = await APICall('post', 'FLATS', payload);
         if(resp?.success) {
             handleOk()
             message.success(resp?.message)
