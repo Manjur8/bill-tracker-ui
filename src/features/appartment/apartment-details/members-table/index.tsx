@@ -101,7 +101,7 @@ const MembersTable = () => {
         user_id: deleteData?.key,
         apartment_id: params.id
       }
-      const resp = await APICall('post', 'APARTMENT_MEMBERS_DELETE', payload)
+      const resp = await APICall('patch', 'APARTMENT_MEMBERS_DELETE', payload)
       setDeleteLoader(false)
       if(resp?.success) {
         message.success(resp?.message)
