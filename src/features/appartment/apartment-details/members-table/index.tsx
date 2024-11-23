@@ -9,6 +9,7 @@ import AddMemberModal from './AddMemberModal';
 import DeleteModdal from '@/components/DeleteModal';
 import { useSelector } from '@/lib/hooks'
 import { RootState } from '@/lib/store'
+import useScreenSize from '@/hooks/useScreenSize'
 
 export interface DataType {
   key: string;
@@ -20,7 +21,8 @@ export interface DataType {
 const MembersTable = () => {
     const params = useParams()
     const userInfo = useSelector((state: RootState) => state.userInfo)
-    const isMobile = window.innerWidth < 576
+    const screenSize = useScreenSize()
+    const isMobile = screenSize.width < 656
     const [tableData, setTableData] = useState<DataType[]>([])
 
     const [addMemberModal, setAddMemberModal] = useState(false)

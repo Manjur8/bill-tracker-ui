@@ -9,9 +9,11 @@ import MembersTable from './members-table';
 import ApartmentFlats from './apartment-flats';
 import { useSelector } from '@/lib/hooks';
 import { RootState } from '@/lib/store';
+import useScreenSize from '@/hooks/useScreenSize';
 
 const ApartmentDetails = () => {
   // const params = useParams();
+  const screenSize = useScreenSize();
 
   const [form] = Form.useForm();
   const apartmentDetails = useSelector((state: RootState) => state.apartmentDetails)
@@ -151,8 +153,8 @@ const ApartmentDetails = () => {
   return (
     <div className='bg-white p-16'>      
       {/* <div className='d-flex justify-content-center align-items-center'> */}
-        <Tabs centered
-          tabPosition={window.innerWidth < 768 ? 'bottom' : 'left'}
+        <Tabs centered style={{height: screenSize.height < 768 ? `${screenSize.height - 135}px` : '100%', overflow: 'auto'}}
+          tabPosition={screenSize.width < 768 ? 'bottom' : 'left'}
           items={tabs.map((tabMenu) => {
             return {
               label: tabMenu.title,

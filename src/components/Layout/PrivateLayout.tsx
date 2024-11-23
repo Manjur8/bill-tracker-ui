@@ -11,12 +11,14 @@ import { apartmentMenu, App_Name, HeaderNavProfileMenus, Logo1, Logo2 } from '@/
 import { type RootState } from '@/lib/store';
 import { useSelector } from '@/lib/hooks';
 import { generateSideMenus } from '@/utils/features';
+// import useScreenSize from '@/hooks/useScreenSize';
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Sider } = Layout;
 
 const PrivateLayout = ({children}: {children: React.ReactNode}) => {
   const router = useRouter();
   const pathName = usePathname();
+  // const screenSize = useScreenSize();
   const [isMobileScreen, setIsMobileScreen] = useState(false)
   const [collapsed, setCollapsed] = useState(true)
   const userInfo = useSelector((state: RootState) => state.userInfo)
@@ -152,9 +154,13 @@ const PrivateLayout = ({children}: {children: React.ReactNode}) => {
                       <Content style={{ margin: '24px 16px 0' }}>
                       {children}
                       </Content>
-                      <Footer style={{ textAlign: 'center' }}>
-                        {App_Name} ©{new Date().getFullYear()}
-                      </Footer>
+                      {/* {
+                        screenSize.width > 768 && (
+                          <Footer style={{ textAlign: 'center' }}>
+                            {App_Name} ©{new Date().getFullYear()}
+                          </Footer>
+                        )
+                      } */}
                   </Layout>
               </Layout>
   )
