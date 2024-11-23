@@ -17,6 +17,7 @@ export const API_ROUTES: Record<string, string> = {
     //========Flats========
     FLATS: '/flats',
     MY_FLATS: '/flats/my-flats',
+    MY_FLAT_MEMBERS: '/flats/my-flat-members',
 
     // ========Users========
     USERS: '/users/list',

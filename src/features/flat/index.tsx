@@ -6,8 +6,10 @@ import { message } from 'antd';
 import React, { useEffect, useState } from 'react'
 import ApartmentCardLoader from '../appartment/ApartmentCardLoader';
 import CustomCards from '@/components/CustomCards';
+import { useRouter } from 'next/navigation';
 
 const Flat = () => {
+  const router = useRouter()
   const [listLoader, setListLoader] = useState(true);
   const [flats, setFlats] = useState<ApartmentFlatsTypes[]>([])
   useEffect(() => {
@@ -44,7 +46,7 @@ const Flat = () => {
                             <div>Flat Number: {flat?.flat_number}</div>
                         </div>
                         <div>Maintainance Due: <span className='fw-bold'>{flat?.maintanance_due || 0}</span></div>
-                        </div>} photo="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" onClickHandler={() => {}} />
+                        </div>} photo="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" onClickHandler={() => { router.push(`/flat/${flat?._id}`)}} />
                 </div>
               ))
             }

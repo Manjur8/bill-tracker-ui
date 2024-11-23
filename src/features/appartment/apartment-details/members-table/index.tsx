@@ -18,7 +18,7 @@ export interface DataType {
   roles: RolesType[];
 }
 
-const MembersTable = () => {
+const MembersTable = ({list = 'apartment'}: {list?: 'apartment' | 'flat'}) => {
     const params = useParams()
     const userInfo = useSelector((state: RootState) => state.userInfo)
     const screenSize = useScreenSize()
@@ -90,7 +90,8 @@ const MembersTable = () => {
         ))
     }
     const membersApiCall = async () => {
-        const resp = await APICall<{result: MembersResponseType[]}>('get', `APARTMENT_MEMBERS?apartment_id=${params.id}`)
+        const listEndpoint = list === 'apartment' ? `APARTMENT_MEMBERS?apartment_id=${params.id}` : `MY_FLAT_MEMBERS?flat_id=${params.id}`
+        const resp = await APICall<{result: MembersResponseType[]}>('get', listEndpoint)
 
         if(resp?.success) {
             setTableData(membersRespInterceptor(resp?.data?.result))
