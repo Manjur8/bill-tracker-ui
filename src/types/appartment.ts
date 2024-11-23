@@ -21,3 +21,13 @@ export interface ApartmentsListTypes {
 export interface ApartmentDetailsTypes extends ApartmentsListTypes {
     members: Record<string, unknown>,
 }
+
+export interface ApartmentFlatsTypes {
+    _id: string,
+    name: string,
+    apartment_id: string,
+    block: string,
+    floor: number,
+    flat_number: string,
+    maintanance_due: number,
+}

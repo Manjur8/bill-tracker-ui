@@ -5,6 +5,7 @@ import { Button, message } from 'antd'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import AddFlatModal from './AddFlatModal'
+import { ApartmentFlatsTypes } from '@/types/appartment'
 
 const ApartmentFlats = () => {
     const params = useParams();
@@ -57,13 +58,3 @@ const ApartmentFlats = () => {
 }
 
 export default ApartmentFlats
-
-interface ApartmentFlatsTypes {
-    _id: string,
-    name: string,
-    apartment_id: string,
-    block: string,
-    floor: number,
-    flat_number: string,
-    maintanance_due: number,
-}

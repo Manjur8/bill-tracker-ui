@@ -1,8 +1,9 @@
+import Flat from '@/features/flat'
 import React from 'react'
 
 const FlatPage = () => {
   return (
-    <div>FlatPage</div>
+    <div><Flat /></div>
   )
 }
 
