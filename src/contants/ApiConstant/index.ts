@@ -24,4 +24,7 @@ export const API_ROUTES: Record<string, string> = {
     
     //=======rules======== 
     RULES_PERMISSIONS: '/rules-and-permissions',
+
+    // ======roles=======
+    ROLES_PERMISSIONS: '/rules-and-permissions/ui-config'
 }

@@ -3,13 +3,15 @@ import MembersTable from '@/features/appartment/apartment-details/members-table'
 import useScreenSize from '@/hooks/useScreenSize';
 import { Tabs } from 'antd';
 import React, { useMemo } from 'react'
+import FlatSettings from './flat-settings';
 
 const FlatDetails = () => {
     const screenSize = useScreenSize();
 
     const tabs = useMemo(() => [
         {id: 'members', title: 'Flat Members', children: <MembersTable list={'flat'} />},
-        {id: 'bills', title: 'My Bills', children: 'Bills UI'}
+        {id: 'bills', title: 'My Bills', children: 'Bills UI'},
+        {id: 'flat-settings', title: 'Flat Settings', children: <FlatSettings />},
     ], [])
 
   return (
