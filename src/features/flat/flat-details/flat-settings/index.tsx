@@ -3,7 +3,7 @@ import { RolesPermissionsTypes } from '@/types/roles-permissions'
 import { RulesPermissionsTypes } from '@/types/rules-permissions'
 import { APICall } from '@/utils/ApiCall'
 import { Card, Checkbox, Collapse, Flex, message, Modal, Spin, Table } from 'antd'
-import { useParams } from 'next/navigation'
+import { useParams, useSearchParams } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
 
 const RoleCard = ({data}: {data: string}) => {
@@ -16,6 +16,8 @@ const RoleCard = ({data}: {data: string}) => {
 
 const FlatSettings = () => {
     const params = useParams()
+    const searchParams = useSearchParams()
+    const apartment_id = searchParams.get('apartment_id')
     const [modal, setModal] = useState<{title: string, data: RolesPermissionsTypes} | false>(false)
     const [roles, setRoles] = useState<RolesPermissionsTypes | null>(null);
     // const [rolesLoading, setRolesLoading] = useState(true)
@@ -25,7 +27,7 @@ const FlatSettings = () => {
 
     useEffect(() => {
         const rolesApiCall = async () => {
-            const resp = await APICall<{result: RolesPermissionsTypes}>('get', 'ROLES_PERMISSIONS?allocation=FLAT');
+            const resp = await APICall<{result: RolesPermissionsTypes}>('get', 'ROLES_PERMISSIONS_CONFIG?allocation=FLAT');
             if(resp?.success) {
                 // console.log(resp?.data)
                 setRoles(resp?.data?.result)
@@ -36,8 +38,8 @@ const FlatSettings = () => {
         }
         const rulesPermissionsApiCall = async () => {
             setRolesOptionLoader(true)
-            // const endPoint = `RULES_PERMISSIONS?match={"flat_id":"${params.id}"}`
-            const endPoint = `RULES_PERMISSIONS?match={"apartment_id":"${'67431fd7e6bd1b40d7299a68'}"}`
+            // const endPoint = `ROLES_PERMISSIONS?match={"flat_id":"${params.id}"}`
+            const endPoint = `FLAT_ROLES?apartment_id=${apartment_id}&flat_id=${params.id}`
             const rulesResp = await APICall<{result: Array<RulesPermissionsTypes>}>('get', endPoint);
     
             if(rulesResp.success) {
@@ -55,7 +57,7 @@ const FlatSettings = () => {
         rulesPermissionsApiCall()
 
         rolesApiCall()
-    }, [params.id])
+    }, [apartment_id, params.id])
     const items = useMemo(() => ([
         {
           key: '1',

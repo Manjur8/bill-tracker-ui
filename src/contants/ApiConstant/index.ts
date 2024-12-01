@@ -22,9 +22,9 @@ export const API_ROUTES: Record<string, string> = {
     // ========Users========
     USERS: '/users/list',
     
-    //=======rules======== 
-    RULES_PERMISSIONS: '/rules-and-permissions',
-
-    // ======roles=======
-    ROLES_PERMISSIONS: '/rules-and-permissions/ui-config'
+    //=======roles======== 
+    ROLES_PERMISSIONS: '/rules-and-permissions',
+    ROLES_PERMISSIONS_CONFIG: '/rules-and-permissions/ui-config',
+    FLAT_ROLES: '/rules-and-permissions/flat-roles',
+    APARTMENT_ROLES: '/rules-and-permissions/flat-roles',
 }

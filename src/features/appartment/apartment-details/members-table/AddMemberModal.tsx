@@ -23,7 +23,7 @@ const AddMemberModal = ({open, onOk, onCancel, data}: AddMemberModalProps) => {
     useEffect(() => {
         const rulesPermissionsApiCall = async () => {
             setRolesOptionLoader(true)
-            const rulesResp = await APICall<{result: Array<{name: string, _id: string}>}>('get', `RULES_PERMISSIONS?match={"apartment_id":"${params.id}"}`);
+            const rulesResp = await APICall<{result: Array<{name: string, _id: string}>}>('get', `ROLES_PERMISSIONS?match={"apartment_id":"${params.id}"}`);
     
             if(rulesResp.success) {
                 const rulesPermissions = rulesResp?.data?.result.map(

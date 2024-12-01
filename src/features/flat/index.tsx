@@ -46,7 +46,7 @@ const Flat = () => {
                             <div>Flat Number: {flat?.flat_number}</div>
                         </div>
                         <div>Maintainance Due: <span className='fw-bold'>{flat?.maintanance_due || 0}</span></div>
-                        </div>} photo="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" onClickHandler={() => { router.push(`/flat/${flat?._id}`)}} />
+                        </div>} photo="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" onClickHandler={() => { router.push(`/flat/${flat?._id}?apartment_id=${flat?.apartment_id}`)}} />
                 </div>
               ))
             }
