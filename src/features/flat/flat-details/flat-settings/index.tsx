@@ -18,63 +18,64 @@ const FlatSettings = () => {
     const params = useParams()
     const searchParams = useSearchParams()
     const apartment_id = searchParams.get('apartment_id')
-    const [modal, setModal] = useState<{title: string, data: RolesPermissionsTypes} | false>(false)
-    const [roles, setRoles] = useState<RolesPermissionsTypes | null>(null);
+    const [modal, setModal] = useState<boolean>(false)
+    const [modalValues, setModalValues] = useState<RulesPermissionsTypes | null>(null);
+    const [rolesConfig, setRolesConfig] = useState<RolesPermissionsTypes | null>(null);
     // const [rolesLoading, setRolesLoading] = useState(true)
 
-    const [rolesOptionLoader, setRolesOptionLoader] = useState(false)
-    const [rolesOptions, setRolesOptions] = useState<RulesPermissionsTypes[]>([])
+    const [rolesLoader, setRolesLoader] = useState(false)
+    const [rolesList, setRolesList] = useState<RulesPermissionsTypes[]>([])
 
     useEffect(() => {
-        const rolesApiCall = async () => {
+        const rolesConfigApiCall = async () => {
             const resp = await APICall<{result: RolesPermissionsTypes}>('get', 'ROLES_PERMISSIONS_CONFIG?allocation=FLAT');
             if(resp?.success) {
                 // console.log(resp?.data)
-                setRoles(resp?.data?.result)
+                setRolesConfig(resp?.data?.result)
             } else {
                 message?.error(resp?.message)
             }
             // setRolesLoading(false)
         }
-        const rulesPermissionsApiCall = async () => {
-            setRolesOptionLoader(true)
+        const rolesPermissionsApiCall = async () => {
+            setRolesLoader(true)
             // const endPoint = `ROLES_PERMISSIONS?match={"flat_id":"${params.id}"}`
             const endPoint = `FLAT_ROLES?apartment_id=${apartment_id}&flat_id=${params.id}`
-            const rulesResp = await APICall<{result: Array<RulesPermissionsTypes>}>('get', endPoint);
+            const rolesResp = await APICall<{result: Array<RulesPermissionsTypes>}>('get', endPoint);
     
-            if(rulesResp.success) {
-                const rulesPermissions = rulesResp?.data?.result.map(
-                    (rule) => ({
-                      name: rule?.name,
-                      _id: rule?._id,
-                      paths: rule?.paths
-                    }),
-                  )
-                  setRolesOptions(rulesPermissions)
+            if(rolesResp.success) {
+                setRolesList(rolesResp?.data?.result)
             }
-            setRolesOptionLoader(false)
+            setRolesLoader(false)
         }
-        rulesPermissionsApiCall()
+        rolesPermissionsApiCall()
 
-        rolesApiCall()
+        rolesConfigApiCall()
     }, [apartment_id, params.id])
+
+    useEffect(() => {
+        if(modal) {
+            
+        }
+    }, [modal])
     const items = useMemo(() => ([
         {
           key: '1',
           label: 'Roles & Permissions',
           children: <Flex wrap align='center' gap={16}>{
-                    rolesOptionLoader ? <Flex justify='center' align='center'><Spin /></Flex>
-                    : rolesOptions?.length > 0 ? rolesOptions.map((role, index) => (
+                    rolesLoader ? <Flex justify='center' align='center'><Spin /></Flex>
+                    : rolesList?.length > 0 ? rolesList.map((role, index) => (
                         <div key={index} onClick={() => {
-                            const values = roles && Object.entries(roles)?.map((role2) => ({
-                                [role2?.[0]]: { ...role2?.[1], value: role?.paths?.[role2?.[0]] }
-                            }))
-                            const output = values && values.reduce((acc, value) => {//+
-                                const key = Object.keys(value)[0];//+
-                                acc[key] = value[key];//+
-                                return acc;
-                              }, {});
-                            setModal({title: role?.name, data:output as unknown as RolesPermissionsTypes || false})
+                            // const values = rolesConfig && Object.entries(rolesConfig)?.map((role2) => ({
+                            //     [role2?.[0]]: { ...role2?.[1], value: role?.paths?.[role2?.[0]] }
+                            // }))
+                            // const output = values && values.reduce((acc, value) => {//+
+                            //     const key = Object.keys(value)[0];//+
+                            //     acc[key] = value[key];//+
+                            //     return acc;
+                            //   }, {});
+                            setModal(true);
+                            setModalValues(role);
                         }}>
                             <RoleCard data={role?.name} />
                         </div>
@@ -86,15 +87,26 @@ const FlatSettings = () => {
           label: 'Other',
           children: <p>No data to show</p>,
         }
-      ]), [roles, rolesOptionLoader, rolesOptions]);
-      const getDataSource = (datas: RolesPermissionsTypes) => {
-        return Object?.values(datas).map((item, index) => ({
+      ]), [rolesLoader, rolesList]);
+      const handleCheckbox = (key: string, val: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH', checked: boolean) => {
+        setModalValues((prev) => {
+            return prev && ({
+                ...prev,
+                paths: {
+                    ...prev?.paths,
+                   [key]:  checked? [...(prev?.paths?.[key] as string[] || []), val] : prev?.paths?.[key]?.filter((item) => item!== val)
+                }
+            })
+        })
+      };
+      const getDataSource = (config: RolesPermissionsTypes, modalValues: RulesPermissionsTypes) => {
+        return Object?.entries(config).map(([key, value], index) => ({
             key: index,
-            create: item?.allowed_perm?.includes('POST') ? <Checkbox defaultChecked={item?.value?.includes('POST')} /> : '-',
-            list: item?.allowed_perm?.includes('GET') ? <Checkbox defaultChecked={item?.value?.includes('GET')} /> : '-',
-            edit: item?.allowed_perm?.includes('PUT') || item?.allowed_perm?.includes('PATCH') ? <Checkbox defaultChecked={item?.value?.includes('PUT') || item?.value?.includes('PATCH')} /> : '-',
-            delete: item?.allowed_perm?.includes('DELETE') ? <Checkbox defaultChecked={item?.value?.includes('DELETE')} /> : '-',
-            service: item?.name
+            create: value?.allowed_perm?.includes('POST') ? <Checkbox checked={modalValues?.paths?.[key]?.includes('POST')} disabled={!modalValues?.editable} onChange={(e) => handleCheckbox(key, 'POST', e.target.checked)} /> : '-',
+            list: value?.allowed_perm?.includes('GET') ? <Checkbox checked={modalValues?.paths?.[key]?.includes('GET')} disabled={!modalValues?.editable} onChange={(e) => handleCheckbox(key, 'GET', e.target.checked)} /> : '-',
+            edit: value?.allowed_perm?.includes('PUT') || value?.allowed_perm?.includes('PATCH') ? <Checkbox checked={modalValues?.paths?.[key]?.includes('PUT') || modalValues?.paths?.[key]?.includes('PATCH')} disabled={!modalValues?.editable} onChange={(e) => {handleCheckbox(key, 'PUT', e.target.checked); handleCheckbox(key, 'PATCH', e.target.checked) }} /> : '-',
+            delete: value?.allowed_perm?.includes('DELETE') ? <Checkbox checked={modalValues?.paths?.[key]?.includes('DELETE')} disabled={!modalValues?.editable} onChange={(e) => handleCheckbox(key, 'DELETE', e.target.checked)} /> : '-',
+            service: value?.name
         }));
       }
     //   const dataSource = [
@@ -121,6 +133,10 @@ const FlatSettings = () => {
         title: 'Create',
         dataIndex: 'create',
         key: 'create',
+        // render: (_: unknown, record: unknown) => {
+        //     console.log(record, 'gg')
+        //     return <Checkbox defaultChecked={true}  />
+        // }
         },
         {
         title: 'List',
@@ -146,8 +162,8 @@ const FlatSettings = () => {
   return (
     <div>
         <Collapse defaultActiveKey={['1']} collapsible="header" items={items} />
-        {modal && <Modal title={modal?.title} open={Object?.keys(modal?.data)?.length > 0} onOk={() => setModal(false)} onCancel={() => setModal(false)}>
-            <Table dataSource={getDataSource(modal?.data)} columns={columns} pagination={{position: ['none', 'none']}} />
+        {modal && modalValues && rolesConfig && <Modal title={modalValues?.name} open={modal} onOk={() => console.log(modalValues, 'ss')} onCancel={() => setModal(false)}>
+            <Table dataSource={getDataSource(rolesConfig, modalValues)} columns={columns} pagination={{position: ['none', 'none']}} />
         </Modal>}
     </div>
   )
