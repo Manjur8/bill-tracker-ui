@@ -26,5 +26,6 @@ export const API_ROUTES: Record<string, string> = {
     ROLES_PERMISSIONS: '/rules-and-permissions',
     ROLES_PERMISSIONS_CONFIG: '/rules-and-permissions/ui-config',
     FLAT_ROLES: '/rules-and-permissions/flat-roles',
-    APARTMENT_ROLES: '/rules-and-permissions/flat-roles',
+    APARTMENT_ROLES: '/rules-and-permissions/apartment-roles',
+    UPDATE_ROLES_PERMISSIONS: '/rules-and-permissions/update',
 }

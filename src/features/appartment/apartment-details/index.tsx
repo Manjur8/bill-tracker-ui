@@ -10,6 +10,7 @@ import ApartmentFlats from './apartment-flats';
 import { useSelector } from '@/lib/hooks';
 import { RootState } from '@/lib/store';
 import useScreenSize from '@/hooks/useScreenSize';
+import ApartmentSettings from './apartment-settings';
 
 const ApartmentDetails = () => {
   // const params = useParams();
@@ -148,7 +149,8 @@ const ApartmentDetails = () => {
               />
         </Form>
       }
-  </>}, {id: 'members', title: 'Members', children: <MembersTable />}, {id: 'flats', title: 'Flats', children: <ApartmentFlats />}];
+  </>}, {id: 'members', title: 'Members', children: <MembersTable />}, {id: 'flats', title: 'Flats', children: <ApartmentFlats />},
+  {id: 'apartment-settings', title: 'Apartment Settings', children: <ApartmentSettings />}];
 
   return (
     <div className='bg-white p-16'>      

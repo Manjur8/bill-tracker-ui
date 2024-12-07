@@ -1,53 +1,21 @@
-import EmptyComponent from '@/components/EmptyComponent'
-import RoleCreateModal from '@/components/RoleCreateModal'
-import { RolesPermissionsTypes } from '@/types/roles-permissions'
-import { RulesPermissionsTypes } from '@/types/rules-permissions'
-import { APICall } from '@/utils/ApiCall'
+import { RulesPermissionsTypes } from '@/types/rules-permissions';
 import { Button, Collapse, Flex, message, Spin } from 'antd'
-import { useParams, useSearchParams } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { PlusOutlined } from '@ant-design/icons'
-import RoleCard from '@/components/RoleCard'
+import { RolesPermissionsTypes } from '@/types/roles-permissions';
+import EmptyComponent from '@/components/EmptyComponent';
+import RoleCard from '@/components/RoleCard';
+import RoleCreateModal from '@/components/RoleCreateModal';
+import { APICall } from '@/utils/ApiCall';
+import { useParams } from 'next/navigation';
 
-const FlatSettings = () => {
+const ApartmentSettings = () => {
     const params = useParams()
-    const searchParams = useSearchParams()
-    const apartment_id = searchParams.get('apartment_id')
     const [modal, setModal] = useState<boolean>(false)
     const [modalValues, setModalValues] = useState<RulesPermissionsTypes | null>(null);
     const [rolesConfig, setRolesConfig] = useState<RolesPermissionsTypes | null>(null);
-    // const [rolesLoading, setRolesLoading] = useState(true)
-
     const [rolesLoader, setRolesLoader] = useState(false)
     const [rolesList, setRolesList] = useState<RulesPermissionsTypes[]>([])
-
-    useEffect(() => {
-        const rolesConfigApiCall = async () => {
-            const resp = await APICall<{result: RolesPermissionsTypes}>('get', 'ROLES_PERMISSIONS_CONFIG?allocation=FLAT');
-            if(resp?.success) {
-                // console.log(resp?.data)
-                setRolesConfig(resp?.data?.result)
-            } else {
-                message?.error(resp?.message)
-            }
-            // setRolesLoading(false)
-        }
-        const rolesPermissionsApiCall = async () => {
-            setRolesLoader(true)
-            // const endPoint = `ROLES_PERMISSIONS?match={"flat_id":"${params.id}"}`
-            const endPoint = `FLAT_ROLES?apartment_id=${apartment_id}&flat_id=${params.id}`
-            const rolesResp = await APICall<{result: Array<RulesPermissionsTypes>}>('get', endPoint);
-    
-            if(rolesResp.success) {
-                setRolesList(rolesResp?.data?.result)
-            }
-            setRolesLoader(false)
-        }
-        rolesPermissionsApiCall()
-
-        rolesConfigApiCall()
-    }, [apartment_id, params.id])
-
     const items = useMemo(() => ([
         {
           key: '1',
@@ -80,29 +48,38 @@ const FlatSettings = () => {
         }
       ]), [rolesLoader, rolesList]);
 
-      const closeModal = useCallback(() => {
+    const apartment_id = params?.id
+
+      useEffect(() => {
+        const rolesConfigApiCall = async () => {
+            const resp = await APICall<{result: RolesPermissionsTypes}>('get', 'ROLES_PERMISSIONS_CONFIG?allocation=APARTMENT');
+            if(resp?.success) {
+                // console.log(resp?.data)
+                setRolesConfig(resp?.data?.result)
+            } else {
+                message?.error(resp?.message)
+            }
+            // setRolesLoading(false)
+        }
+        const rolesPermissionsApiCall = async () => {
+            setRolesLoader(true)
+            // const endPoint = `ROLES_PERMISSIONS?match={"flat_id":"${params.id}"}`
+            const endPoint = `APARTMENT_ROLES?apartment_id=${apartment_id}`
+            const rolesResp = await APICall<{result: Array<RulesPermissionsTypes>}>('get', endPoint);
+    
+            if(rolesResp.success) {
+                setRolesList(rolesResp?.data?.result)
+            }
+            setRolesLoader(false)
+        }
+        rolesPermissionsApiCall()
+
+        rolesConfigApiCall()
+    }, [apartment_id])
+    const closeModal = useCallback(() => {
         setModal(false)
         setModalValues(null)
       }, [])
-      
-    //   const dataSource = [
-    //     {
-    //     key: '1',
-    //     create: <Checkbox defaultChecked />,
-    //     list: <Checkbox />,
-    //     edit: <Checkbox defaultChecked />,
-    //     delete: <Checkbox />,
-    //     service: 'Service 1'
-    //     },
-    //     {
-    //     key: '2',
-    //     create: <Checkbox defaultChecked />,
-    //     list: <Checkbox defaultChecked />,
-    //     edit:<Checkbox />,
-    //     delete: <Checkbox defaultChecked />,
-    //     service: 'Service 2',
-    //     },
-    //     ];
   return (
     <>
         <Collapse defaultActiveKey={['1']} collapsible="header" items={items} />
@@ -111,4 +88,4 @@ const FlatSettings = () => {
   )
 }
 
-export default FlatSettings
+export default ApartmentSettings
