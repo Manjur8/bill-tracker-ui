@@ -149,7 +149,7 @@ const MembersTable = ({list = 'apartment'}: {list?: 'apartment' | 'flat'}) => {
               <Table<DataType> columns={columns} dataSource={tableData} pagination={false} />
         }
       </>
-        {list === 'apartment' && <AddMemberModal open={addMemberModal} onOk={() => {membersApiCall(); setAddMemberModal(false)}} onCancel={() => setAddMemberModal(false)} data={editMemberData} />}
+        <AddMemberModal open={addMemberModal} onOk={() => {membersApiCall(); setAddMemberModal(false)}} onCancel={() => setAddMemberModal(false)} data={editMemberData} list={list} />
         <DeleteModdal open={deleteModdal} handleOk={deleteMember} handleCancel={() => {setDeleteModal(false); setDeleteData(null)}} submitLoader={deleteLoader} title={'Member'} />
     </div>
   )
