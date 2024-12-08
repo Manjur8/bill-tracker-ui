@@ -8,6 +8,7 @@ import { useParams, useSearchParams } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { PlusOutlined } from '@ant-design/icons'
 import RoleCard from '@/components/RoleCard'
+import DeleteModdal from '@/components/DeleteModal'
 
 const FlatSettings = () => {
     const params = useParams()
@@ -20,6 +21,11 @@ const FlatSettings = () => {
 
     const [rolesLoader, setRolesLoader] = useState(false)
     const [rolesList, setRolesList] = useState<RulesPermissionsTypes[]>([])
+
+    // =======Delete Role states======
+    const [deleteModdal, setDeleteModal] = useState<RulesPermissionsTypes | null>(null)
+    const [deleteLoader, setDeleteLoader] = useState(false)
+
 
     useEffect(() => {
         const rolesConfigApiCall = async () => {
@@ -68,7 +74,7 @@ const FlatSettings = () => {
                             setModal(true);
                             setModalValues(role);
                         }}>
-                            <RoleCard data={role?.name} />
+                            <RoleCard data={role} setDeleteModal={setDeleteModal} />
                         </div>
                     ))  : <EmptyComponent />
                 }</Flex>
@@ -85,28 +91,25 @@ const FlatSettings = () => {
         setModalValues(null)
       }, [])
       
-    //   const dataSource = [
-    //     {
-    //     key: '1',
-    //     create: <Checkbox defaultChecked />,
-    //     list: <Checkbox />,
-    //     edit: <Checkbox defaultChecked />,
-    //     delete: <Checkbox />,
-    //     service: 'Service 1'
-    //     },
-    //     {
-    //     key: '2',
-    //     create: <Checkbox defaultChecked />,
-    //     list: <Checkbox defaultChecked />,
-    //     edit:<Checkbox />,
-    //     delete: <Checkbox defaultChecked />,
-    //     service: 'Service 2',
-    //     },
-    //     ];
+      const handleDeleteRole = async (role: RulesPermissionsTypes) => {
+        setDeleteLoader(true)
+        const resp = await APICall<{message: string}>('delete', `DELETE_ROLES_PERMISSIONS?role_id=${role._id}`)
+        if(resp?.success) {
+            message.success(resp?.message)
+            const updatedRolesList = rolesList.filter((r) => r._id!== role._id)
+            setRolesList(updatedRolesList)
+            setDeleteModal(null)
+        } else {
+            message.error(resp?.message)
+        }
+        setDeleteLoader(false)
+    }
+
   return (
     <>
         <Collapse defaultActiveKey={['1']} collapsible="header" items={items} />
         {modal && modalValues && rolesConfig && <RoleCreateModal {...{modalValues, modal, closeModal, setRolesList, setModalValues, rolesConfig}} />}
+        <DeleteModdal open={Boolean(deleteModdal)} handleOk={() => {handleDeleteRole(deleteModdal as RulesPermissionsTypes)}}  handleCancel={() => {setDeleteModal(null)}} submitLoader={deleteLoader} title='Role' />
     </>
   )
 }

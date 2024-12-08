@@ -8,6 +8,7 @@ import RoleCard from '@/components/RoleCard';
 import RoleCreateModal from '@/components/RoleCreateModal';
 import { APICall } from '@/utils/ApiCall';
 import { useParams } from 'next/navigation';
+import DeleteModdal from '@/components/DeleteModal';
 
 const ApartmentSettings = () => {
     const params = useParams()
@@ -16,6 +17,11 @@ const ApartmentSettings = () => {
     const [rolesConfig, setRolesConfig] = useState<RolesPermissionsTypes | null>(null);
     const [rolesLoader, setRolesLoader] = useState(false)
     const [rolesList, setRolesList] = useState<RulesPermissionsTypes[]>([])
+
+    // =======Delete Role states======
+    const [deleteModdal, setDeleteModal] = useState<RulesPermissionsTypes | null>(null)
+    const [deleteLoader, setDeleteLoader] = useState(false)
+
     const items = useMemo(() => ([
         {
           key: '1',
@@ -36,7 +42,7 @@ const ApartmentSettings = () => {
                             setModal(true);
                             setModalValues(role);
                         }}>
-                            <RoleCard data={role?.name} />
+                            <RoleCard data={role} setDeleteModal={setDeleteModal} />
                         </div>
                     ))  : <EmptyComponent />
                 }</Flex>
@@ -80,10 +86,26 @@ const ApartmentSettings = () => {
         setModal(false)
         setModalValues(null)
       }, [])
+
+    const handleDeleteRole = async (role: RulesPermissionsTypes) => {
+        setDeleteLoader(true)
+        const resp = await APICall<{message: string}>('delete', `DELETE_ROLES_PERMISSIONS?role_id=${role._id}`)
+        if(resp?.success) {
+            message.success(resp?.message)
+            const updatedRolesList = rolesList.filter((r) => r._id!== role._id)
+            setRolesList(updatedRolesList)
+            setDeleteModal(null)
+        } else {
+            message.error(resp?.message)
+        }
+        setDeleteLoader(false)
+    }
+
   return (
     <>
         <Collapse defaultActiveKey={['1']} collapsible="header" items={items} />
         {modal && modalValues && rolesConfig && <RoleCreateModal {...{modalValues, modal, closeModal, setRolesList, setModalValues, rolesConfig}} />}
+        <DeleteModdal open={Boolean(deleteModdal)} handleOk={() => {handleDeleteRole(deleteModdal as RulesPermissionsTypes)}}  handleCancel={() => {setDeleteModal(null)}} submitLoader={deleteLoader} title='Role' />
     </>
   )
 }
