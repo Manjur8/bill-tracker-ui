@@ -60,7 +60,7 @@ const FlatSettings = () => {
           label: 'Roles & Permissions',
           extra: <Button type='primary' onClick={() => {setModal(true); setModalValues({editable: true, paths: {}} as RulesPermissionsTypes)}}><PlusOutlined /> Create Role</Button>,
           children: <Flex wrap align='center' gap={16}>{
-                    rolesLoader ? <Flex justify='center' align='center'><Spin /></Flex>
+                    rolesLoader ? <Flex justify='center' align='center' className='w-100'><Spin /></Flex>
                     : rolesList?.length > 0 ? rolesList.map((role, index) => (
                         <div key={index} onClick={() => {
                             // const values = rolesConfig && Object.entries(rolesConfig)?.map((role2) => ({
