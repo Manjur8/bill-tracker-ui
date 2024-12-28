@@ -10,7 +10,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 const CustomLayout = ({children}: {children: React.ReactNode}) => {
   const pathName = usePathname();
-  const isPublicPage = pathName.startsWith('/auth')
+  const isPublicPage = pathName.startsWith('/auth') || pathName.includes('/ready')
   // const [userInfo, setUserInfo] = useState(userInfoDetails)
   // useEffect(() => {
   //   async function getUserInfo () {

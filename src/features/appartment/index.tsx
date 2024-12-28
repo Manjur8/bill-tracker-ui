@@ -2,13 +2,16 @@
 import { message } from 'antd';
 import React, { useEffect, useState } from 'react'
 import CustomCards from '@/components/CustomCards';
-import { APICall } from '@/utils/ApiCall';
+// import { APICall } from '@/utils/ApiCall';
 import ApartmentCardLoader from './ApartmentCardLoader';
 import EmptyComponent from '@/components/EmptyComponent';
 import { useRouter } from 'next/navigation';
 import { ApartmentsListTypes } from '@/types/appartment';
 import { useDispatch } from 'react-redux';
 import { setApartmentDetails } from '@/utils/slices/apartmentDetails';
+import axios from 'axios';
+import { API_ROUTES } from '@/contants/ApiConstant';
+import { getCookies } from '@/utils/cookies';
 
 const Appartment = () => {
     const router = useRouter();
@@ -24,10 +27,15 @@ const Appartment = () => {
     useEffect(() => {
       const getApartmentsList = async() => {
         setListLoader(true)
-        const resp = await APICall<{result: ApartmentsListTypes[]}>('get', 'MY_APARTMENT');
+        // const resp = await APICall<{result: ApartmentsListTypes[]}>('get', 'MY_APARTMENT');
+        const token = await getCookies('auth-token');
+        const endPoint = process.env.NEXT_PUBLIC_API_BASE_URL + API_ROUTES.MY_APARTMENT
+        const response = await axios.get(endPoint, {headers: {"Authorization": `Bearer ${token}`}})
+
+        const resp = response.data
         
         if(resp?.success) {
-          setApartmentsList(resp?.data?.result)
+          setApartmentsList(resp?.result)
         } else {
           messageApi.open({
             type: 'error',
